@@ -1,7 +1,4 @@
-nalloc
-======
-
-Allocation Free Option Types in Scala
+nalloc: Allocation Free Option Types in Scala
 ======
 
 The goal of this project is to provide the following constructs:
@@ -22,16 +19,17 @@ The following functions are currently available in the master branch:
 - `map(f: A => B)` If `A`'s value in the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
 
 Example Usages
-`def doWork(x: Int) {
+<p><code>
+def doWork(x: Int) {
 
     x match {
-        case OptionalLong(value) => 
+        case OptionalLong(value) => // no allocation or boxing
         case _                   =>
     }
 
-    val y = x.map(_ + 1)
+    val y = x.map(_ + 1) // no allocation or boxing
 }
-`
+</code></p>
 
 Requirements
 ======
