@@ -1,6 +1,5 @@
 package com.bitb.kcits.optional
 
-import Floats._
 import org.scalacheck.Gen
 import org.scalatest._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
@@ -15,12 +14,12 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("The empty value maps to the empty value of its target type") {
-    Float.NaN.map(_ + 1.toByte).isNaN shouldBe true
-    Float.NaN.map(_ + 1.toShort).isNaN shouldBe true
-    Float.NaN.map(_ + 1).isNaN shouldBe true
-    Float.NaN.map(_ + 1L).isNaN shouldBe true
-    Float.NaN.map(_ + 1f).isNaN shouldBe true
-    Float.NaN.map(_ + 1d).isNaN shouldBe true
+    OptionalFloat(Float.NaN).map(_ + 1.toByte).isNaN shouldBe true
+    OptionalFloat(Float.NaN).map(_ + 1.toShort).isNaN shouldBe true
+    OptionalFloat(Float.NaN).map(_ + 1).isNaN shouldBe true
+    OptionalFloat(Float.NaN).map(_ + 1L).isNaN shouldBe true
+    OptionalFloat(Float.NaN).map(_ + 1f).isNaN shouldBe true
+    OptionalFloat(Float.NaN).map(_ + 1d).isNaN shouldBe true
   }
 
   property("Non empty values unapply to themselves") {
@@ -35,12 +34,12 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   property("Non empty values map using the passed in function") {
     forAll(smallFloat, smallFloat) { (value: Float, modifier: Float) =>
       whenever(modifier != 0) {
-        value.map(_ + modifier) shouldBe (value + modifier)
-        value.map(_ - modifier) shouldBe (value - modifier)
-        value.map(_ * modifier) shouldBe (value * modifier)
-        value.map(_ / modifier) shouldBe (value / modifier)
-        value.map(_ % modifier) shouldBe (value % modifier)
-        value.map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalFloat(value).map(_ + modifier) shouldBe (value + modifier)
+        OptionalFloat(value).map(_ - modifier) shouldBe (value - modifier)
+        OptionalFloat(value).map(_ * modifier) shouldBe (value * modifier)
+        OptionalFloat(value).map(_ / modifier) shouldBe (value / modifier)
+        OptionalFloat(value).map(_ % modifier) shouldBe (value % modifier)
+        OptionalFloat(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
       }
     }
   }

@@ -1,6 +1,5 @@
 package com.bitb.kcits.optional
 
-import com.bitb.kcits.optional.Longs.OptionalLong
 import java.util.Random
 import org.scalatest.PropSpec
 import scala.annotation.switch
@@ -44,6 +43,7 @@ class MapMemorySpec extends PropSpec with GcSupport with MemoryRecorder {
       case _               =>
     }
 
+    if (OptionalLong(10).map(_ + 5) != 15) fail()
     if (customOptionValues(0) != 0) fail()
     initMemory()
   }
@@ -60,9 +60,9 @@ class MapMemorySpec extends PropSpec with GcSupport with MemoryRecorder {
       }
 
       (i % 3: @switch) match {
-        case 0 => sum += optional.map(_ + i)
-        case 1 => sum += optional.map(_ * i)
-        case 2 => sum += optional.map(_ - i)
+        case 0 => sum += OptionalLong(optional).map(_ + i)
+        case 1 => sum += OptionalLong(optional).map(_ * i)
+        case 2 => sum += OptionalLong(optional).map(_ - i)
       }
 
       i += 1

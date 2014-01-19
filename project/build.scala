@@ -50,7 +50,7 @@ object Shared {
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
     shellPrompt := ShellPrompt.buildShellPrompt,
-    compile <<= compile in Compile dependsOn (compile in Test)
+    compile <<= compile in Compile dependsOn(compile in Test, compile in IntegrationTest)
   )
 }
 

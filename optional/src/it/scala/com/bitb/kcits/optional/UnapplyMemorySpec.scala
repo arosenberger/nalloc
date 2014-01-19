@@ -1,6 +1,5 @@
 package com.bitb.kcits.optional
 
-import com.bitb.kcits.optional.Longs._
 import java.util.Random
 import org.scalatest.PropSpec
 import scala.annotation.switch
@@ -44,7 +43,7 @@ final class UnapplyMemorySpec extends PropSpec with GcSupport with MemoryRecorde
       case _               =>
     }
 
-    println(1.map(_ + 1))
+    println(OptionalLong(1).map(_ + 1))
 
     if (seedValuesSum == 0) fail()
     if (customOptionValues(0) != 0) fail()

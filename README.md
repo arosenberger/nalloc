@@ -27,7 +27,7 @@ def doWork(x: Int) {
         case _                   =>
     }
 
-    val y = x.map(_ + 1) // no allocation or boxing
+    val y = OptionalInt(x).map(_ + 1) // no allocation or boxing
 }
 ```
 

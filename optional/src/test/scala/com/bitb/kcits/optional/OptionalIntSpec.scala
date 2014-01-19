@@ -1,6 +1,5 @@
 package com.bitb.kcits.optional
 
-import Ints._
 import org.scalatest._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
@@ -14,12 +13,12 @@ class OptionalIntSpec extends PropSpec with Matchers with GeneratorDrivenPropert
   }
 
   property("The empty value maps to the empty value of its target type") {
-    Int.MinValue.map(_ + 1.toByte) shouldBe Int.MinValue
-    Int.MinValue.map(_ + 1.toShort) shouldBe Int.MinValue
-    Int.MinValue.map(_ + 1) shouldBe Int.MinValue
-    Int.MinValue.map(_ + 1L) shouldBe Long.MinValue
-    Int.MinValue.map(_ + 1f).isNaN shouldBe true
-    Int.MinValue.map(_ + 1d).isNaN shouldBe true
+    OptionalInt(Int.MinValue).map(_ + 1.toByte) shouldBe Int.MinValue
+    OptionalInt(Int.MinValue).map(_ + 1.toShort) shouldBe Int.MinValue
+    OptionalInt(Int.MinValue).map(_ + 1) shouldBe Int.MinValue
+    OptionalInt(Int.MinValue).map(_ + 1L) shouldBe Long.MinValue
+    OptionalInt(Int.MinValue).map(_ + 1f).isNaN shouldBe true
+    OptionalInt(Int.MinValue).map(_ + 1d).isNaN shouldBe true
   }
 
   property("Non empty values unapply to themselves") {
@@ -36,13 +35,13 @@ class OptionalIntSpec extends PropSpec with Matchers with GeneratorDrivenPropert
   property("Non empty values map using the passed in function") {
     forAll { (value: Int, modifier: Int) =>
       whenever(value != Int.MinValue && modifier != 0) {
-        value.map(_ + modifier) shouldBe (value + modifier)
-        value.map(_ - modifier) shouldBe (value - modifier)
-        value.map(_ * modifier) shouldBe (value * modifier)
-        value.map(_ / modifier) shouldBe (value / modifier)
-        value.map(_ % modifier) shouldBe (value % modifier)
-        value.map(_ ^ modifier) shouldBe (value ^ modifier)
-        value.map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalInt(value).map(_ + modifier) shouldBe (value + modifier)
+        OptionalInt(value).map(_ - modifier) shouldBe (value - modifier)
+        OptionalInt(value).map(_ * modifier) shouldBe (value * modifier)
+        OptionalInt(value).map(_ / modifier) shouldBe (value / modifier)
+        OptionalInt(value).map(_ % modifier) shouldBe (value % modifier)
+        OptionalInt(value).map(_ ^ modifier) shouldBe (value ^ modifier)
+        OptionalInt(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
       }
     }
   }
