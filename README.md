@@ -19,7 +19,7 @@ The following functions are currently available in the master branch:
 - `map(f: A => B)` If `A`'s value in the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
 
 Example Usages
-<p><code>
+```
 def doWork(x: Int) {
 
     x match {
@@ -29,7 +29,7 @@ def doWork(x: Int) {
 
     val y = x.map(_ + 1) // no allocation or boxing
 }
-</code></p>
+```
 
 Requirements
 ======
