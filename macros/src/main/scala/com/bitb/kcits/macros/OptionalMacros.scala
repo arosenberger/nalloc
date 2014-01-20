@@ -58,6 +58,7 @@ object OptionalMacros {
       case x if x =:= c.WeakTypeTag.Long.tpe   => q"0x8000000000000000L"
       case x if x =:= c.WeakTypeTag.Float.tpe  => q"java.lang.Float.NaN"
       case x if x =:= c.WeakTypeTag.Double.tpe => q"java.lang.Double.NaN"
+      case x if x <:< c.WeakTypeTag.AnyRef.tpe => q"null"
       case x                                   => c.abort(c.enclosingPosition, s"Type $x does not support sentinel value checks")
     }
   }

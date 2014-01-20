@@ -15,6 +15,8 @@ object Build extends sbt.Build {
       id = "optional",
       base = file("optional")
     ).dependsOn(macros)
+    .settings(Defaults.itSettings: _*)
+    .settings(compile <<= compile in Compile dependsOn(compile in Test, compile in IntegrationTest))
     .settings(parallelExecution in IntegrationTest := false)
 
   lazy val macros =
@@ -24,7 +26,8 @@ object Build extends sbt.Build {
     ).settings(libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _))
 
   def project(id: String, base: File) =
-    Project(id = id,
+    Project(
+      id = id,
       base = base,
       settings =
         Project.defaultSettings ++
@@ -32,8 +35,8 @@ object Build extends sbt.Build {
         releaseSettings ++
         Seq(
           libraryDependencies ++= Shared.testDeps
-        )).settings(Defaults.itSettings: _*)
-    .configs(IntegrationTest)
+        )
+    ).configs(IntegrationTest)
 }
 
 object Shared {
@@ -46,11 +49,10 @@ object Shared {
   val settings = Seq(
     organization := "com.bitb.kcits",
     scalaVersion := "2.11.0-M7",
-    scalacOptions := Seq("-deprecation", "-feature", "-optimise", "-language:experimental.macros"),
+    scalacOptions := Seq("-deprecation", "-feature", "-optimise", "-language:experimental.macros", "-Yinline-warnings"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
-    shellPrompt := ShellPrompt.buildShellPrompt,
-    compile <<= compile in Compile dependsOn(compile in Test, compile in IntegrationTest)
+    shellPrompt := ShellPrompt.buildShellPrompt
   )
 }
 
