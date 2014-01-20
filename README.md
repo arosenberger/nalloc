@@ -22,7 +22,7 @@ Higher Order Functions
 ------
 
 The following functions are currently available in the master branch:
-- `map(f: A => B)` If `A`'s value in the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
+- `map(f: A => B)` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
 
 Example Usages:
 ```
