@@ -1,4 +1,4 @@
-nalloc: Allocation Free Options in Scala
+Allocation Free Options in Scala
 ======
 
 The goal of this project is to provide the following constructs:
@@ -36,10 +36,10 @@ Pattern matching is similar to that of Scala's `Option` type
 ####Higher Order Functions
 
 The following functions are currently available in the master branch:
-- `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
-- `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the result is a no-op call.
 
-##### map
+- map
+-- `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
+
 ```
     // no allocation or boxing of x, no anonymous function created
     val y = OptionalInt(x).map(_ + 1)
@@ -49,7 +49,8 @@ The following functions are currently available in the master branch:
 }
 ```
 
-##### foreach
+- foreach
+-- `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
 ```
     // no anonymous function created
     Optional(x).foreach(println)
