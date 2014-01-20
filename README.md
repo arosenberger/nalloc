@@ -39,20 +39,27 @@ The following functions are currently available in the master branch:
 
 - `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
 ```
-    // no allocation or boxing of x, no anonymous function created
+    // no allocation of OptionalInt
+    // no boxing of x
+    // no anonymous function created
     val y = OptionalInt(x).map(_ + 1)
 
-    // no allocation, no anonymous function created
+    // no allocation of Optional
+    // no anonymous function created
+    // x will still be wrapped in an array due to the varargs signature of List.apply
     val y = Optional(x).map(List(_))
 }
 ```
 
 - `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
 ```
+    // no allocation of Optional
     // no anonymous function created
     Optional(x).foreach(println)
 
-    // no anonymous function created, x will box to Integer so it can be passed to println
+    // no allocation of OptionalInt
+    // no anonymous function created
+    // x will still box to Integer so it can be passed to println
     OptionalInt(x).foreach(println)
 }
 ```
