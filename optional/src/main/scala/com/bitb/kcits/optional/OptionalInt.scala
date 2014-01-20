@@ -16,4 +16,5 @@ final class OptionalInt(val value: Int) extends AnyVal {
   def isMaxValue = value == 2147483647
 
   def map[T](f: Int => T): T = macro OptionalMacros.map_impl[Int, T]
+  def foreach(f: Int => Unit): Unit = macro OptionalMacros.foreach_impl[Int]
 }

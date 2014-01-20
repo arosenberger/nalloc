@@ -16,4 +16,5 @@ final class OptionalFloat(val value: Float) extends AnyVal {
   def isMaxValue = value == java.lang.Float.MAX_VALUE
 
   def map[T](f: Float => T): T = macro OptionalMacros.map_impl[Float, T]
+  def foreach(f: Float => Unit): Unit = macro OptionalMacros.foreach_impl[Float]
 }

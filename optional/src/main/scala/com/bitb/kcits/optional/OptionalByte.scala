@@ -16,5 +16,6 @@ final class OptionalByte(val value: Byte) extends AnyVal {
   def isMaxValue = value == 127
 
   def map[T](f: Byte => T): T = macro OptionalMacros.map_impl[Byte, T]
+  def foreach(f: Byte => Unit): Unit = macro OptionalMacros.foreach_impl[Byte]
 }
 

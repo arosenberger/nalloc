@@ -13,12 +13,12 @@ class OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenProper
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalByte(Byte.MinValue).map(_ + 1.toByte) shouldBe Int.MinValue
-    OptionalByte(Byte.MinValue).map(_ + 1.toShort) shouldBe Int.MinValue
-    OptionalByte(Byte.MinValue).map(_ + 1) shouldBe Int.MinValue
-    OptionalByte(Byte.MinValue).map(_ + 1L) shouldBe Long.MinValue
-    OptionalByte(Byte.MinValue).map(_ + 1f).isNaN shouldBe true
-    OptionalByte(Byte.MinValue).map(_ + 1d).isNaN shouldBe true
+    OptionalByte.empty.map(_ + 1.toByte) shouldBe Int.MinValue
+    OptionalByte.empty.map(_ + 1.toShort) shouldBe Int.MinValue
+    OptionalByte.empty.map(_ + 1) shouldBe Int.MinValue
+    OptionalByte.empty.map(_ + 1L) shouldBe Long.MinValue
+    OptionalByte.empty.map(_ + 1f).isNaN shouldBe true
+    OptionalByte.empty.map(_ + 1d).isNaN shouldBe true
   }
 
   property("Non empty values unapply to themselves") {
@@ -42,6 +42,20 @@ class OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenProper
         OptionalByte(value).map(_ % modifier) shouldBe (value % modifier)
         OptionalByte(value).map(_ ^ modifier) shouldBe (value ^ modifier)
         OptionalByte(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+      }
+    }
+  }
+
+  property("foreach on the empty value is a no-op") {
+    OptionalByte.empty.foreach(_ => fail())
+  }
+
+  property("foreach acts on non empty values") {
+    forAll { x: Byte =>
+      whenever(x != Byte.MinValue) {
+        var executed = false
+        OptionalByte(x).foreach(_ => executed = true)
+        executed shouldBe true
       }
     }
   }

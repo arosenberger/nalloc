@@ -16,4 +16,5 @@ final class OptionalShort(val value: Short) extends AnyVal {
   def isMaxValue = value == 32767
 
   def map[T](f: Short => T): T = macro OptionalMacros.map_impl[Short, T]
+  def foreach(f: Short => Unit): Unit = macro OptionalMacros.foreach_impl[Short]
 }

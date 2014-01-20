@@ -13,12 +13,12 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalLong(Long.MinValue).map(_ + 1.toByte) shouldBe Long.MinValue
-    OptionalLong(Long.MinValue).map(_ + 1.toShort) shouldBe Long.MinValue
-    OptionalLong(Long.MinValue).map(_ + 1) shouldBe Long.MinValue
-    OptionalLong(Long.MinValue).map(_ + 1L) shouldBe Long.MinValue
-    OptionalLong(Long.MinValue).map(_ + 1f).isNaN shouldBe true
-    OptionalLong(Long.MinValue).map(_ + 1d).isNaN shouldBe true
+    OptionalLong.empty.map(_ + 1.toByte) shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1.toShort) shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1) shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1L) shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1f).isNaN shouldBe true
+    OptionalLong.empty.map(_ + 1d).isNaN shouldBe true
   }
 
   property("Non empty values unapply to themselves") {
@@ -42,6 +42,20 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
         OptionalLong(value).map(_ % modifier) shouldBe (value % modifier)
         OptionalLong(value).map(_ ^ modifier) shouldBe (value ^ modifier)
         OptionalLong(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+      }
+    }
+  }
+
+  property("foreach on the empty value is a no-op") {
+    OptionalLong.empty.foreach(_ => fail())
+  }
+
+  property("foreach acts on non empty values") {
+    forAll { x: Long =>
+      whenever(x != Long.MinValue) {
+        var executed = false
+        OptionalLong(x).foreach(_ => executed = true)
+        executed shouldBe true
       }
     }
   }

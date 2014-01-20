@@ -1,47 +1,79 @@
 package com.bitb.kcits.macros
 
 import scala.language.existentials
-import scala.reflect.macros.BlackboxContext
+import scala.reflect.macros._
 
 object OptionalMacros {
 
   def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B]): c.Expr[B] = {
     import c.universe._
 
-    val underlyingValue = c.Expr[A](Select(c.prefix.tree, TermName("value")))
+    val underlying = underlyingValue[A](c)
 
-    c.weakTypeTag[A].tpe match {
-      case x if x =:= c.WeakTypeTag.Float.tpe ||
-                x =:= c.WeakTypeTag.Double.tpe => floatingPointTypeSentinelGuard(c)(underlyingValue, f)
-      case _                                   => integralTypeSentinelGuard(c)(underlyingValue, f)
+    def withFloatingPointSentinelGuard: c.Expr[B] = {
+      val sentinelTo = sentinelValue[B](c)
+
+      new Inliner[c.type](c).inlineAndReset( q"""
+    if ($underlying != $underlying)
+      $sentinelTo
+    else
+      $f($underlying)
+    """)
     }
-  }
 
-  private def integralTypeSentinelGuard[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(underlyingValue: c.Expr[A], f: c.Expr[A => B]): c.Expr[B] = {
-    import c.universe._
+    def withSentinelGuard: c.Expr[B] = {
+      val sentinelFrom = sentinelValue[A](c)
+      val sentinelTo = sentinelValue[B](c)
 
-    val sentinelFrom = sentinelValue[A](c)
-    val sentinelTo = sentinelValue[B](c)
-
-    new Inliner[c.type](c).inlineAndReset( q"""
-    if ($sentinelFrom == $underlyingValue)
+      new Inliner[c.type](c).inlineAndReset( q"""
+    if ($sentinelFrom == $underlying)
       $sentinelTo
     else
-      $f($underlyingValue)
+      $f($underlying)
     """)
+    }
+
+    if (isFloatingPointType[A](c))
+      withFloatingPointSentinelGuard
+    else
+      withSentinelGuard
   }
 
-  private def floatingPointTypeSentinelGuard[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(underlyingValue: c.Expr[A], f: c.Expr[A => B]): c.Expr[B] = {
+  def foreach_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => Unit]): c.Expr[Unit] = {
     import c.universe._
 
-    val sentinelTo = sentinelValue[B](c)
+    val underlying = underlyingValue[A](c)
 
-    new Inliner[c.type](c).inlineAndReset( q"""
-    if ($underlyingValue != $underlyingValue)
-      $sentinelTo
-    else
-      $f($underlyingValue)
+    def withFloatingPointSentinelGuard: c.Expr[Unit] =
+      new Inliner[c.type](c).inlineAndReset( q"""
+    if ($underlying == $underlying)
+      $f($underlying)
     """)
+
+    def withSentinelGuard: c.Expr[Unit] = {
+      val sentinel = sentinelValue[A](c)
+
+      new Inliner[c.type](c).inlineAndReset( q"""
+    if ($sentinel != $underlying)
+      $f($underlying)
+    """)
+    }
+
+    if (isFloatingPointType[A](c))
+      withFloatingPointSentinelGuard
+    else
+      withSentinelGuard
+  }
+
+  private def underlyingValue[A: c.WeakTypeTag](c: BlackboxContext) = {
+    import c.universe._
+
+    c.Expr[A](Select(c.prefix.tree, TermName("value")))
+  }
+
+  private def isFloatingPointType[A: c.WeakTypeTag](c: BlackboxContext) = c.weakTypeTag[A].tpe match {
+    case x if x =:= c.WeakTypeTag.Float.tpe || x =:= c.WeakTypeTag.Double.tpe => true
+    case _                                                                    => false
   }
 
   private def sentinelValue[X: c.WeakTypeTag](c: BlackboxContext): c.universe.Tree = {

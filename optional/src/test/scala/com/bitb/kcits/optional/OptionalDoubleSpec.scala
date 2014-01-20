@@ -14,12 +14,12 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalDouble(Double.NaN).map(_ + 1).isNaN shouldBe true
-    OptionalDouble(Double.NaN).map(_ + 1).isNaN shouldBe true
-    OptionalDouble(Double.NaN).map(_ + 1).isNaN shouldBe true
-    OptionalDouble(Double.NaN).map(_ + 1).isNaN shouldBe true
-    OptionalDouble(Double.NaN).map(_ + 1f).isNaN shouldBe true
-    OptionalDouble(Double.NaN).map(_ + 1d).isNaN shouldBe true
+    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
+    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
+    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
+    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
+    OptionalDouble.empty.map(_ + 1f).isNaN shouldBe true
+    OptionalDouble.empty.map(_ + 1d).isNaN shouldBe true
   }
 
   property("Non empty values unapply to themselves") {
@@ -41,6 +41,18 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
         OptionalDouble(value).map(_ % modifier) shouldBe (value % modifier)
         OptionalDouble(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
       }
+    }
+  }
+
+  property("foreach on the empty value is a no-op") {
+    OptionalDouble.empty.foreach(_ => fail())
+  }
+
+  property("foreach acts on non empty values") {
+    forAll { x: Double =>
+      var executed = false
+      OptionalDouble(x).foreach(_ => executed = true)
+      executed shouldBe true
     }
   }
 

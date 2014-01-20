@@ -16,4 +16,5 @@ final class OptionalLong(val value: Long) extends AnyVal {
   def isMaxValue = value == 0x7fffffffffffffffL
 
   def map[T](f: Long => T): T = macro OptionalMacros.map_impl[Long, T]
+  def foreach(f: Long => Unit): Unit = macro OptionalMacros.foreach_impl[Long]
 }

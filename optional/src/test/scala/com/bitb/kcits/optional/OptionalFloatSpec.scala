@@ -14,12 +14,12 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalFloat(Float.NaN).map(_ + 1.toByte).isNaN shouldBe true
-    OptionalFloat(Float.NaN).map(_ + 1.toShort).isNaN shouldBe true
-    OptionalFloat(Float.NaN).map(_ + 1).isNaN shouldBe true
-    OptionalFloat(Float.NaN).map(_ + 1L).isNaN shouldBe true
-    OptionalFloat(Float.NaN).map(_ + 1f).isNaN shouldBe true
-    OptionalFloat(Float.NaN).map(_ + 1d).isNaN shouldBe true
+    OptionalFloat.empty.map(_ + 1.toByte).isNaN shouldBe true
+    OptionalFloat.empty.map(_ + 1.toShort).isNaN shouldBe true
+    OptionalFloat.empty.map(_ + 1).isNaN shouldBe true
+    OptionalFloat.empty.map(_ + 1L).isNaN shouldBe true
+    OptionalFloat.empty.map(_ + 1f).isNaN shouldBe true
+    OptionalFloat.empty.map(_ + 1d).isNaN shouldBe true
   }
 
   property("Non empty values unapply to themselves") {
@@ -41,6 +41,18 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
         OptionalFloat(value).map(_ % modifier) shouldBe (value % modifier)
         OptionalFloat(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
       }
+    }
+  }
+
+  property("foreach on the empty value is a no-op") {
+    OptionalFloat.empty.foreach(_ => fail())
+  }
+
+  property("foreach acts on non empty values") {
+    forAll { x: Float =>
+      var executed = false
+      OptionalFloat(x).foreach(_ => executed = true)
+      executed shouldBe true
     }
   }
 

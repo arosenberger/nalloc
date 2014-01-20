@@ -40,4 +40,18 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
       }
     }
   }
+
+  property("foreach on the empty value is a no-op") {
+    Optional.empty[String].foreach(_ => fail())
+  }
+
+  property("foreach acts on non empty values") {
+    forAll { x: String =>
+      whenever(x != null) {
+        var executed = false
+        Optional(x).foreach(_ => executed = true)
+        executed shouldBe true
+      }
+    }
+  }
 }
