@@ -22,7 +22,8 @@ Higher Order Functions
 ------
 
 The following functions are currently available in the master branch:
-- `map(f: A => B)` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
+- `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
+- `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the result is a no-op call.
 
 Example Usages:
 ```
@@ -32,7 +33,9 @@ def doWork(x: Int) {
         case _                   =>
     }
 
-    val y = OptionalInt(x).map(_ + 1) // no allocation or boxing
+    val y = OptionalInt(x).map(_ + 1) // no allocation or boxing of x, no anonymous function created
+
+    OptionalInt(x).foreach(println) // x will be Boxed due to the println call, but the println is inlined without creating an anonymous function
 }
 ```
 
