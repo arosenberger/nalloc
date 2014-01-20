@@ -8,7 +8,7 @@ object Build extends sbt.Build {
     project(
       id = "nalloc",
       base = file(".")
-    ).aggregate(optional, macros)
+    ).aggregate(optional, macros, sandbox)
 
   lazy val optional =
     project(
@@ -18,6 +18,12 @@ object Build extends sbt.Build {
     .settings(Defaults.itSettings: _*)
     .settings(compile <<= compile in Compile dependsOn(compile in Test, compile in IntegrationTest))
     .settings(parallelExecution in IntegrationTest := false)
+
+  lazy val sandbox =
+    project(
+      id = "sandbox",
+      base = file("sandbox")
+    ).dependsOn(optional)
 
   lazy val macros =
     project(
@@ -49,7 +55,14 @@ object Shared {
   val settings = Seq(
     organization := "com.bitb.kcits",
     scalaVersion := "2.11.0-M7",
-    scalacOptions := Seq("-deprecation", "-feature", "-optimise", "-language:experimental.macros", "-Yinline-warnings"),
+    scalacOptions := Seq(
+      "-deprecation",
+      "-feature",
+      "-optimise",
+      "-language:experimental.macros",
+      "-Yinline-warnings",
+      "-Ymacro-debug-lite"
+    ),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
     shellPrompt := ShellPrompt.buildShellPrompt

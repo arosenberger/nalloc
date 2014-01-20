@@ -20,31 +20,27 @@ object OptionalMacros {
   private def integralTypeSentinelGuard[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(underlyingValue: c.Expr[A], f: c.Expr[A => B]): c.Expr[B] = {
     import c.universe._
 
-    val temp = new SyntaxSupport[c.type](c).name("temp")
     val sentinelFrom = sentinelValue[A](c)
     val sentinelTo = sentinelValue[B](c)
 
     new Inliner[c.type](c).inlineAndReset( q"""
-    val $temp = $underlyingValue
-    if ($sentinelFrom == $temp)
+    if ($sentinelFrom == $underlyingValue)
       $sentinelTo
     else
-      $f($temp)
+      $f($underlyingValue)
     """)
   }
 
   private def floatingPointTypeSentinelGuard[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(underlyingValue: c.Expr[A], f: c.Expr[A => B]): c.Expr[B] = {
     import c.universe._
 
-    val temp = new SyntaxSupport[c.type](c).name("temp")
     val sentinelTo = sentinelValue[B](c)
 
     new Inliner[c.type](c).inlineAndReset( q"""
-    val $temp = $underlyingValue
-    if ($temp != $temp)
+    if ($underlyingValue != $underlyingValue)
       $sentinelTo
     else
-      $f($temp)
+      $f($underlyingValue)
     """)
   }
 
