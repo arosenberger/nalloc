@@ -37,8 +37,7 @@ Pattern matching is similar to that of Scala's `Option` type
 
 The following functions are currently available in the master branch:
 
-- map
---* `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
+- `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
 
 ```
     // no allocation or boxing of x, no anonymous function created
@@ -49,8 +48,7 @@ The following functions are currently available in the master branch:
 }
 ```
 
-- foreach
---* `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
+- `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
 ```
     // no anonymous function created
     Optional(x).foreach(println)
