@@ -48,7 +48,6 @@ The following functions are currently available in the master branch:
     // no anonymous function created
     // x will still be wrapped in an array due to the varargs signature of List.apply
     val y = Optional(x).map(List(_))
-}
 ```
 
 - `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
@@ -61,7 +60,6 @@ The following functions are currently available in the master branch:
     // no anonymous function created
     // x will still box to Integer so it can be passed to println
     OptionalInt(x).foreach(println)
-}
 ```
 
 Requirements
