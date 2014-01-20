@@ -6,8 +6,7 @@ The goal of this project is to provide the following constructs:
 - Higher order functions that are inlined by a macro expansion during compilation
 
 Its functionality is based on the excellent work Paul Phillips contributed to 2.11.0-M5 to make extractors name based.
-Optional Primitives
-------
+###Optional Primitives
 
 Each primitive (save for Char and Boolean currently) has its own dedicated optional type. Null/empty values are represented by sentinels:
 - In the case of integral types, Type.MinValue
