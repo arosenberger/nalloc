@@ -65,6 +65,26 @@ object OptionalMacros {
       withSentinelGuard
   }
 
+  def exists_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => Boolean]): c.Expr[Boolean] = {
+    import c.universe._
+
+    val underlying = underlyingValue[A](c)
+
+    def withFloatingPointSentinelGuard: c.Expr[Boolean] =
+      new Inliner[c.type](c).inlineAndReset( q"""$underlying == $underlying && $f($underlying)""")
+
+    def withSentinelGuard: c.Expr[Boolean] = {
+      val sentinel = sentinelValue[A](c)
+
+      new Inliner[c.type](c).inlineAndReset( q"""$sentinel != $underlying && $f($underlying)""")
+    }
+
+    if (isFloatingPointType[A](c))
+      withFloatingPointSentinelGuard
+    else
+      withSentinelGuard
+  }
+
   private def underlyingValue[A: c.WeakTypeTag](c: BlackboxContext) = {
     import c.universe._
 

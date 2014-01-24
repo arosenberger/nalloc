@@ -60,4 +60,17 @@ class OptionalShortSpec extends PropSpec with Matchers with GeneratorDrivenPrope
       }
     }
   }
+
+  property("exists on the empty value always returns false") {
+    OptionalShort.empty.exists(_ => true) shouldBe false
+  }
+
+  property("exists on non empty values evaluates the passed in function") {
+    forAll { x: Short =>
+      whenever(x != Short.MinValue) {
+        OptionalShort(x).exists(x => x == x) shouldBe true
+        OptionalShort(x).exists(x => x == x + 1) shouldBe false
+      }
+    }
+  }
 }

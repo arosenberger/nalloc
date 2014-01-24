@@ -56,5 +56,16 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
     }
   }
 
+  property("exists on the empty value always returns false") {
+    OptionalFloat.empty.exists(_ => true) shouldBe false
+  }
+
+  property("exists on non empty values evaluates the passed in function") {
+    forAll { x: Float =>
+      OptionalFloat(x).exists(x => x == x) shouldBe true
+      OptionalFloat(x).exists(x => x.isNaN) shouldBe false
+    }
+  }
+
   private def smallFloat: Gen[Float] = Gen.choose(0, 1000).map(_ * 1f)
 }

@@ -62,6 +62,18 @@ The following functions are currently available in the master branch:
     OptionalInt(x).foreach(println)
 ```
 
+- `exists[A](f: A => Boolean): Boolean` If `A`'s value is the sentinel for that type, returns false. Otherwise evaluates the passed in function.
+```
+    // no allocation of Optional
+    // no anonymous function created
+    Optional(x).exists(_ == "foo")
+
+    // no allocation of OptionalInt
+    // no boxing of x
+    // no anonymous function created
+    OptionalInt(x).exists(_ % 2 == 0)
+```
+
 Requirements
 ------
 

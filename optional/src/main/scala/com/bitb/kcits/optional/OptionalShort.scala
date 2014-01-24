@@ -17,4 +17,5 @@ final class OptionalShort(val value: Short) extends AnyVal {
 
   def map[T](f: Short => T): T = macro OptionalMacros.map_impl[Short, T]
   def foreach(f: Short => Unit): Unit = macro OptionalMacros.foreach_impl[Short]
+  def exists(f: Short => Boolean): Boolean = macro OptionalMacros.exists_impl[Short]
 }

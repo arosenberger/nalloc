@@ -54,4 +54,17 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
       }
     }
   }
+
+  property("exists on the empty value always returns false") {
+    Optional.empty[String].exists(_ => true) shouldBe false
+  }
+
+  property("exists on non empty values evaluates the passed in function") {
+    forAll { x: String =>
+      whenever(x != null) {
+        Optional(x).exists(x => x == x) shouldBe true
+        Optional(x).exists(x => x == x + 1) shouldBe false
+      }
+    }
+  }
 }

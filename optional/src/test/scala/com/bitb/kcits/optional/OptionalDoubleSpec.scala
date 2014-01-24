@@ -56,5 +56,16 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
     }
   }
 
+  property("exists on the empty value always returns false") {
+    OptionalDouble.empty.exists(_ => true) shouldBe false
+  }
+
+  property("exists on non empty values evaluates the passed in function") {
+    forAll { x: Double =>
+      OptionalDouble(x).exists(x => x == x) shouldBe true
+      OptionalDouble(x).exists(x => x.isNaN) shouldBe false
+    }
+  }
+
   private def smallDouble: Gen[Double] = Gen.choose(0, 1000).map(_ * 1d)
 }

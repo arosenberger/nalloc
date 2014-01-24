@@ -17,4 +17,5 @@ final class OptionalInt(val value: Int) extends AnyVal {
 
   def map[T](f: Int => T): T = macro OptionalMacros.map_impl[Int, T]
   def foreach(f: Int => Unit): Unit = macro OptionalMacros.foreach_impl[Int]
+  def exists(f: Int => Boolean): Boolean = macro OptionalMacros.exists_impl[Int]
 }

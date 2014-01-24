@@ -59,4 +59,17 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
       }
     }
   }
+
+  property("exists on the empty value always returns false") {
+    OptionalLong.empty.exists(_ => true) shouldBe false
+  }
+
+  property("exists on non empty values evaluates the passed in function") {
+    forAll { x: Long =>
+      whenever(x != Long.MinValue) {
+        OptionalLong(x).exists(x => x == x) shouldBe true
+        OptionalLong(x).exists(x => x == x + 1) shouldBe false
+      }
+    }
+  }
 }

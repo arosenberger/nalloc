@@ -17,5 +17,6 @@ final class OptionalByte(val value: Byte) extends AnyVal {
 
   def map[T](f: Byte => T): T = macro OptionalMacros.map_impl[Byte, T]
   def foreach(f: Byte => Unit): Unit = macro OptionalMacros.foreach_impl[Byte]
+  def exists(f: Byte => Boolean): Boolean = macro OptionalMacros.exists_impl[Byte]
 }
 
