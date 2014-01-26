@@ -74,6 +74,18 @@ The following functions are currently available in the master branch:
     OptionalInt(x).exists(_ % 2 == 0)
 ```
 
+- `filter[A](f: A => Boolean): OptionalType` If `A`'s value is the sentinel for that type or the passed in function evaluates false, returns the empty optional type. Otherwise returns the original optional type.
+```
+    // no allocation of Optional
+    // no anonymous function created
+    Optional(x).filter(_ == "foo")
+
+    // no allocation of OptionalInt
+    // no boxing of x
+    // no anonymous function created
+    OptionalInt(x).filter(_ % 2 == 0)
+```
+
 Requirements
 ------
 
