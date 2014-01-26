@@ -1,19 +1,18 @@
-package com.bitb.kcits.optional
+package com.bitb.kcits.sandbox.memoryusage
 
+import com.bitb.kcits.optional._
 import java.util.Random
-import org.scalatest.PropSpec
 import scala.annotation.switch
 
-final class UnapplyMemorySpec extends PropSpec with GcSupport with MemoryRecorder {
+object MapMemoryUsage extends App with GcSupport with MemoryRecorder {
   protected def passes = 25
   private[this] val passes_ = passes
   private[this] val iterations = 1e7.toInt
   private[this] val random = new Random
   private[this] val seedValues = (1 to iterations).map(_ => random.nextLong()).toArray
   private[this] val seedValuesReverse = seedValues.reverse
-  private[this] val seedValuesSum = seedValues.sum
 
-  private[this] val customOptionValues = new Array[Long](iterations)
+  private[this] val customOptionValues = new Array[Long](passes)
 
   forceGc()
   touchCode()
@@ -25,6 +24,7 @@ final class UnapplyMemorySpec extends PropSpec with GcSupport with MemoryRecorde
     i += 1
   }
 
+  println(customOptionValues.sum)
   dumpMemoryStats()
 
   private def touchCode() {
@@ -39,19 +39,18 @@ final class UnapplyMemorySpec extends PropSpec with GcSupport with MemoryRecorde
     }
 
     Long.MinValue match {
-      case OptionalLong(x) => fail("Sentinel value unapplied")
+      case OptionalLong(x) => sys.error("Sentinel value unapplied")
       case _               =>
     }
 
-    println(OptionalLong(1).map(_ + 1))
-
-    if (seedValuesSum == 0) fail()
-    if (customOptionValues(0) != 0) fail()
+    if (OptionalLong(10).map(_ + 5) != 15) sys.error("")
+    if (customOptionValues(0) != 0) sys.error("")
     initMemory()
   }
 
   def runCustomOptionsTest(pass: Int) {
     var i = 0
+    var sum = 0L
     val limit = iterations
     recordMemoryBefore(pass)
     while (i < limit) {
@@ -60,22 +59,15 @@ final class UnapplyMemorySpec extends PropSpec with GcSupport with MemoryRecorde
         case 1 => seedValuesReverse(i)
       }
 
-      optional match {
-        case OptionalLong(x) => customOptionValues(i) = x
-        case _               =>
+      (i % 3: @switch) match {
+        case 0 => sum += OptionalLong(optional).map(_ + i)
+        case 1 => sum += OptionalLong(optional).map(_ * i)
+        case 2 => sum += OptionalLong(optional).map(_ - i)
       }
 
       i += 1
     }
+    customOptionValues(pass) = sum
     recordMemoryAfter(pass)
-    var sum = 0L
-    i = 0
-    while (i < limit) {
-      sum += customOptionValues(i)
-      i += 1
-    }
-
-    if (sum != seedValuesSum)
-      fail()
   }
 }

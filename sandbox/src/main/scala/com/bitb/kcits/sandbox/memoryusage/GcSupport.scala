@@ -1,4 +1,4 @@
-package com.bitb.kcits.optional
+package com.bitb.kcits.sandbox.memoryusage
 
 import java.lang.management.ManagementFactory
 

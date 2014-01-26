@@ -1,8 +1,6 @@
-package com.bitb.kcits.optional
+package com.bitb.kcits.sandbox.memoryusage
 
-import org.scalatest.Suite
-
-trait MemoryRecorder {self: Suite =>
+trait MemoryRecorder {
   final private[this] val customOptionMemoryBefore = new Array[Long](passes)
   final private[this] val customOptionMemoryAfter = new Array[Long](passes)
 
@@ -24,8 +22,8 @@ trait MemoryRecorder {self: Suite =>
   }
 
   final protected def initMemory() {
-    if (customOptionMemoryBefore(0) != 0) fail()
-    if (customOptionMemoryAfter(0) != 0) fail()
+    if (customOptionMemoryBefore(0) != 0) sys.error("")
+    if (customOptionMemoryAfter(0) != 0) sys.error("")
     println(freeMemory)
   }
 
