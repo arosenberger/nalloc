@@ -71,18 +71,38 @@ object OptionalMacros {
     val underlying = underlyingValue[A](c)
 
     def withFloatingPointSentinelGuard: c.Expr[Boolean] =
-      new Inliner[c.type](c).inlineAndReset( q"""$underlying == $underlying && $f($underlying)""")
+      new Inliner[c.type](c).inlineAndReset(q"$underlying == $underlying && $f($underlying)")
 
     def withSentinelGuard: c.Expr[Boolean] = {
       val sentinel = sentinelValue[A](c)
 
-      new Inliner[c.type](c).inlineAndReset( q"""$sentinel != $underlying && $f($underlying)""")
+      new Inliner[c.type](c).inlineAndReset(q"$sentinel != $underlying && $f($underlying)")
     }
 
     if (isFloatingPointType[A](c))
       withFloatingPointSentinelGuard
     else
       withSentinelGuard
+  }
+
+  def filter_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => Boolean]) = {
+    import c.universe._
+
+    val underlying = underlyingValue[A](c)
+    val sentinel = sentinelValue[A](c)
+
+    val optionalType = c.macroApplication.tpe
+
+    val sentinelGuard =
+    if (isFloatingPointType[A](c)) q"$underlying == $underlying"
+    else q"$sentinel != $underlying"
+
+    new Inliner[c.type](c).inlineAndReset(q"""
+    if ($sentinelGuard && $f($underlying))
+      ${c.prefix.tree}
+    else
+      new $optionalType($sentinel)
+    """)
   }
 
   private def underlyingValue[A: c.WeakTypeTag](c: BlackboxContext) = {

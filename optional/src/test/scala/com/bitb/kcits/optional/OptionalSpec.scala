@@ -63,7 +63,21 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
     forAll { x: String =>
       whenever(x != null) {
         Optional(x).exists(x => x == x) shouldBe true
-        Optional(x).exists(x => x == x + 1) shouldBe false
+        Optional(x).exists(x => x == x + "foo") shouldBe false
+      }
+    }
+  }
+
+  property("filter on the empty value always returns the empty value") {
+    Optional.empty[String].filter(_ => false) shouldBe Optional.empty[String]
+    Optional.empty[String].filter(_ => true) shouldBe Optional.empty[String]
+  }
+
+  property("filter on non empty values evaluates the passed in function") {
+    forAll { x: String =>
+      whenever(x != null) {
+        Optional(x).filter(x => x == x) shouldBe Optional(x)
+        Optional(x).filter(x => x == x + "foo") shouldBe Optional.empty[String]
       }
     }
   }

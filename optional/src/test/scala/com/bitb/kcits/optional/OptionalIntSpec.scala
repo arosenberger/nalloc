@@ -72,4 +72,18 @@ class OptionalIntSpec extends PropSpec with Matchers with GeneratorDrivenPropert
       }
     }
   }
+
+  property("filter on the empty value always returns the empty value") {
+    OptionalInt.empty.filter(_ => false) shouldBe OptionalInt.empty
+    OptionalInt.empty.filter(_ => true) shouldBe OptionalInt.empty
+  }
+
+  property("filter on non empty values evaluates the passed in function") {
+    forAll { x: Int =>
+      whenever(x != Int.MinValue) {
+        OptionalInt(x).filter(x => x == x) shouldBe OptionalInt(x)
+        OptionalInt(x).filter(x => x == x + 1) shouldBe OptionalInt.empty
+      }
+    }
+  }
 }

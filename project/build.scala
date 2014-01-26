@@ -61,7 +61,7 @@ object Shared {
       "-optimise",
       "-language:experimental.macros",
       "-Yinline-warnings"
-      ,"-Ymacro-debug-lite"
+//      ,"-Ymacro-debug-lite"
     ),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),

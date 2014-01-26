@@ -18,4 +18,5 @@ final class OptionalLong(val value: Long) extends AnyVal {
   def map[T](f: Long => T): T = macro OptionalMacros.map_impl[Long, T]
   def foreach(f: Long => Unit): Unit = macro OptionalMacros.foreach_impl[Long]
   def exists(f: Long => Boolean): Boolean = macro OptionalMacros.exists_impl[Long]
+  def filter(f: Long => Boolean): OptionalLong = macro OptionalMacros.filter_impl[Long]
 }

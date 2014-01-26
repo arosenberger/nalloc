@@ -72,4 +72,18 @@ class OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenProper
       }
     }
   }
+
+  property("filter on the empty value always returns the empty value") {
+    OptionalByte.empty.filter(_ => false) shouldBe OptionalByte.empty
+    OptionalByte.empty.filter(_ => true) shouldBe OptionalByte.empty
+  }
+
+  property("filter on non empty values evaluates the passed in function") {
+    forAll { x: Byte =>
+      whenever(x != Byte.MinValue) {
+        OptionalByte(x).filter(x => x == x) shouldBe OptionalByte(x)
+        OptionalByte(x).filter(x => x == x + 1) shouldBe OptionalByte.empty
+      }
+    }
+  }
 }

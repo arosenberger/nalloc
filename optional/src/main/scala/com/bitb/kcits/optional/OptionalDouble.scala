@@ -18,4 +18,5 @@ final class OptionalDouble(val value: Double) extends AnyVal {
   def map[T](f: Double => T): T = macro OptionalMacros.map_impl[Double, T]
   def foreach(f: Double => Unit): Unit = macro OptionalMacros.foreach_impl[Double]
   def exists(f: Double => Boolean): Boolean = macro OptionalMacros.exists_impl[Double]
+  def filter(f: Double => Boolean): OptionalDouble = macro OptionalMacros.filter_impl[Double]
 }

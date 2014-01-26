@@ -13,7 +13,7 @@ class OptionalShortSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalShort.empty.map(_ + 1.toByte) shouldBe Int.MinValue
+    OptionalShort.empty.map(_ + 1.toShort) shouldBe Int.MinValue
     OptionalShort.empty.map(_ + 1.toShort) shouldBe Int.MinValue
     OptionalShort.empty.map(_ + 1) shouldBe Int.MinValue
     OptionalShort.empty.map(_ + 1L) shouldBe Long.MinValue
@@ -70,6 +70,20 @@ class OptionalShortSpec extends PropSpec with Matchers with GeneratorDrivenPrope
       whenever(x != Short.MinValue) {
         OptionalShort(x).exists(x => x == x) shouldBe true
         OptionalShort(x).exists(x => x == x + 1) shouldBe false
+      }
+    }
+  }
+
+  property("filter on the empty value always returns the empty value") {
+    OptionalShort.empty.filter(_ => false) shouldBe OptionalShort.empty
+    OptionalShort.empty.filter(_ => true) shouldBe OptionalShort.empty
+  }
+
+  property("filter on non empty values evaluates the passed in function") {
+    forAll { x: Short =>
+      whenever(x != Short.MinValue) {
+        OptionalShort(x).filter(x => x == x) shouldBe OptionalShort(x)
+        OptionalShort(x).filter(x => x == x + 1) shouldBe OptionalShort.empty
       }
     }
   }
