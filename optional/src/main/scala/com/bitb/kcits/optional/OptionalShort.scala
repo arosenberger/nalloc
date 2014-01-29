@@ -19,4 +19,5 @@ final class OptionalShort(val value: Short) extends AnyVal {
   def foreach(f: Short => Unit): Unit = macro OptionalMacros.foreach_impl[Short]
   def exists(f: Short => Boolean): Boolean = macro OptionalMacros.exists_impl[Short]
   def filter(f: Short => Boolean): OptionalShort = macro OptionalMacros.filter_impl[Short]
+  def orElse(f: => Short): Short = macro OptionalMacros.getOrElse_impl[Short]
 }

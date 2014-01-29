@@ -81,4 +81,16 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
       }
     }
   }
+
+  property("getOrElse on the empty value returns the passed in alternative") {
+    Optional.empty[String].orElse("foo") shouldBe "foo"
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: String =>
+      whenever(x != null) {
+        Optional(x).orElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
 }

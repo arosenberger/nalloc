@@ -79,5 +79,15 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
     }
   }
 
+  property("getOrElse on the empty value returns the passed in alternative") {
+    OptionalFloat.empty.orElse(1.toByte) shouldBe 1
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: Float =>
+      OptionalFloat(x).orElse(throw new IllegalArgumentException) shouldBe x
+    }
+  }
+
   private def smallFloat: Gen[Float] = Gen.choose(0, 1000).map(_ * 1f)
 }

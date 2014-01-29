@@ -86,4 +86,16 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
       }
     }
   }
+
+  property("getOrElse on the empty value returns the passed in alternative") {
+    OptionalLong.empty.orElse(1.toByte) shouldBe 1
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: Long =>
+      whenever(x != Long.MinValue) {
+        OptionalLong(x).orElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
 }

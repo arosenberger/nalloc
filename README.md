@@ -86,6 +86,18 @@ The following functions are currently available in the master branch:
     OptionalInt(x).filter(_ % 2 == 0)
 ```
 
+- `orElse[A](f: => A): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise returns the value.
+```
+    // no allocation of Optional
+    // no anonymous function created
+    Optional(x).orElse("foo")
+
+    // no allocation of OptionalInt
+    // no boxing of x
+    // no anonymous function created
+    OptionalInt(x).orElse(15)
+```
+
 Requirements
 ------
 

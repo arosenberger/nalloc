@@ -94,14 +94,32 @@ object OptionalMacros {
     val optionalType = c.macroApplication.tpe
 
     val sentinelGuard =
-    if (isFloatingPointType[A](c)) q"$underlying == $underlying"
-    else q"$sentinel != $underlying"
+      if (isFloatingPointType[A](c)) q"$underlying == $underlying"
+      else q"$sentinel != $underlying"
 
-    new Inliner[c.type](c).inlineAndReset(q"""
+    new Inliner[c.type](c).inlineAndReset( q"""
     if ($sentinelGuard && $f($underlying))
       ${c.prefix.tree}
     else
       new $optionalType($sentinel)
+    """)
+  }
+
+  def getOrElse_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A]) = {
+    import c.universe._
+
+    val underlying = underlyingValue[A](c)
+    val sentinel = sentinelValue[A](c)
+
+    val sentinelGuard =
+      if (isFloatingPointType[A](c)) q"$underlying != $underlying"
+      else q"$sentinel == $underlying"
+
+    new Inliner[c.type](c).inlineAndReset( q"""
+    if ($sentinelGuard)
+      $f
+    else
+      $underlying
     """)
   }
 

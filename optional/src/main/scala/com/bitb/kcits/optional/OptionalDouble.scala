@@ -19,4 +19,5 @@ final class OptionalDouble(val value: Double) extends AnyVal {
   def foreach(f: Double => Unit): Unit = macro OptionalMacros.foreach_impl[Double]
   def exists(f: Double => Boolean): Boolean = macro OptionalMacros.exists_impl[Double]
   def filter(f: Double => Boolean): OptionalDouble = macro OptionalMacros.filter_impl[Double]
+  def orElse(f: => Double): Double = macro OptionalMacros.getOrElse_impl[Double]
 }

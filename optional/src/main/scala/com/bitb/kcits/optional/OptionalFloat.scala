@@ -19,4 +19,5 @@ final class OptionalFloat(val value: Float) extends AnyVal {
   def foreach(f: Float => Unit): Unit = macro OptionalMacros.foreach_impl[Float]
   def exists(f: Float => Boolean): Boolean = macro OptionalMacros.exists_impl[Float]
   def filter(f: Float => Boolean): OptionalFloat = macro OptionalMacros.filter_impl[Float]
+  def orElse(f: => Float): Float = macro OptionalMacros.getOrElse_impl[Float]
 }

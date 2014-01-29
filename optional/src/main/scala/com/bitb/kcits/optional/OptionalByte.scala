@@ -19,5 +19,6 @@ final class OptionalByte(val value: Byte) extends AnyVal {
   def foreach(f: Byte => Unit): Unit = macro OptionalMacros.foreach_impl[Byte]
   def exists(f: Byte => Boolean): Boolean = macro OptionalMacros.exists_impl[Byte]
   def filter(f: Byte => Boolean): OptionalByte = macro OptionalMacros.filter_impl[Byte]
+  def orElse(f: => Byte): Byte = macro OptionalMacros.getOrElse_impl[Byte]
 }
 

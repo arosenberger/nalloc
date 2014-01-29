@@ -18,4 +18,5 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   def foreach(f: A => Unit): Unit = macro OptionalMacros.foreach_impl[A]
   def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
   def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
+  def orElse(f: => A): A = macro OptionalMacros.getOrElse_impl[A]
 }
