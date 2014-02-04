@@ -19,7 +19,7 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
     Optional(null: String).map(_.toLong) shouldBe Long.MinValue
     Optional(null: String).map(_.toFloat).isNaN shouldBe true
     Optional(null: String).map(_.toDouble).isNaN shouldBe true
-    Optional(null: String).map(_ + "foo") shouldBe null
+    Optional(null: String).map(_ + "foo") shouldBe (null: String)
   }
 
   property("Non empty values unapply to themselves") {

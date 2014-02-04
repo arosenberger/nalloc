@@ -27,7 +27,7 @@ trait OptionalImplicits {
     type OptionalType = OptionalDouble
   }
 
-  implicit def OptionalRefResolver[A >: Null]: OptionalResolver[A] = new OptionalResolver[A] {
+  implicit def OptionalRefResolver[A >: Null <: AnyRef]: OptionalResolver[A] { type OptionalType = Optional[A] } = new OptionalResolver[A] {
     type OptionalType = Optional[A]
   }
 }

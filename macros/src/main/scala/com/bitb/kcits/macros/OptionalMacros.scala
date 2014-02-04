@@ -9,7 +9,7 @@ trait OptionalResolver[T] {
 
 object OptionalMacros {
 
-  def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B])(x: c.Expr[OptionalResolver[B]]): c.Expr[OptionalResolver[B]#OptionalType] = {
+  def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B])(x: c.Expr[OptionalResolver[B]]): c.Expr[x.value.OptionalType] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)

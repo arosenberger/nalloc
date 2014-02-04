@@ -11,11 +11,12 @@ object OptionalDouble extends OptionalImplicits {
 final class OptionalDouble(val value: Double) extends AnyVal {
   def isEmpty = value != value
   def get: Double = value
+  def isNaN = value.isNaN
 
   def isMinValue = value == java.lang.Double.MIN_VALUE
   def isMaxValue = value == java.lang.Double.MAX_VALUE
 
-  def map[T: OptionalResolver](f: Double => T): OptionalResolver[T]#OptionalType = macro OptionalMacros.map_impl[Double, T]
+  def map[T](f: Double => T)(implicit x: OptionalResolver[T]): x.OptionalType = macro OptionalMacros.map_impl[Double, T]
   def foreach(f: Double => Unit): Unit = macro OptionalMacros.foreach_impl[Double]
   def exists(f: Double => Boolean): Boolean = macro OptionalMacros.exists_impl[Double]
   def filter(f: Double => Boolean): OptionalDouble = macro OptionalMacros.filter_impl[Double]
