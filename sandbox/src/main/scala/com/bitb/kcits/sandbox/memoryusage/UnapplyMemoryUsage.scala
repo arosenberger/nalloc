@@ -4,7 +4,7 @@ import com.bitb.kcits.optional.OptionalLong
 import java.util.Random
 import scala.annotation.switch
 
-object UnapplyMemoryUsage extends App with GcSupport with MemoryRecorder {
+object UnapplyMemoryUsage extends MemoryUsageApp {
   protected def passes = 25
   private[this] val passes_ = passes
   private[this] val iterations = 1e7.toInt

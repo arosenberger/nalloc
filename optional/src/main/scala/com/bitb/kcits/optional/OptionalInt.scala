@@ -1,8 +1,8 @@
 package com.bitb.kcits.optional
 
-import com.bitb.kcits.macros.OptionalMacros
+import com.bitb.kcits.macros._
 
-object OptionalInt {
+object OptionalInt extends OptionalImplicits {
   final def empty: OptionalInt = new OptionalInt(-2147483648)
   final def apply(value: Int): OptionalInt = new OptionalInt(value)
   final def unapply(value: Int): OptionalInt = new OptionalInt(value)
@@ -15,7 +15,7 @@ final class OptionalInt(val value: Int) extends AnyVal {
   def isMinValue = value == -2147483647
   def isMaxValue = value == 2147483647
 
-  def map[T](f: Int => T): T = macro OptionalMacros.map_impl[Int, T]
+  def map[T: OptionalResolver](f: Int => T): OptionalResolver[T]#OptionalType = macro OptionalMacros.map_impl[Int, T]
   def foreach(f: Int => Unit): Unit = macro OptionalMacros.foreach_impl[Int]
   def exists(f: Int => Boolean): Boolean = macro OptionalMacros.exists_impl[Int]
   def filter(f: Int => Boolean): OptionalInt = macro OptionalMacros.filter_impl[Int]

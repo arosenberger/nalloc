@@ -3,20 +3,29 @@ package com.bitb.kcits.macros
 import scala.language.existentials
 import scala.reflect.macros._
 
+trait OptionalResolver[T] {
+  type OptionalType
+}
+
 object OptionalMacros {
 
-  def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B]): c.Expr[B] = {
+  def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B])(x: c.Expr[OptionalResolver[B]]): c.Expr[OptionalResolver[B]#OptionalType] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
     val sentinelTo = sentinelValue[B](c)
     val sentinelGuard = generateSentinelGuard[A](c)(underlying)
 
+    val optionalType = x.tree.tpe.declarations
+                       .find(x => x.isType && x.name == TypeName("OptionalType"))
+                       .map(_.typeSignature)
+                       .getOrElse(c.abort(c.enclosingPosition, "Couldn't determine optional type"))
+
     new Inliner[c.type](c).inlineAndReset( q"""
     if ($sentinelGuard)
-      $f($underlying)
+      new $optionalType($f($underlying))
     else
-      $sentinelTo
+      new $optionalType($sentinelTo)
     """)
   }
 

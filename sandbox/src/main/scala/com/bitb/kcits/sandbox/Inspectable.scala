@@ -3,7 +3,7 @@ package com.bitb.kcits.sandbox
 import com.bitb.kcits.optional._
 import java.util.Random
 
-abstract class Inspectable {
+abstract class Inspectable extends OptionalImplicits {
   private[this] val random = new Random()
 
   protected[this] val b = OptionalByte(random.nextInt().toByte)
