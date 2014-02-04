@@ -34,12 +34,12 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
   property("Non empty values map using the passed in function") {
     forAll(smallDouble, smallDouble) { (value: Double, modifier: Double) =>
       whenever(modifier != 0) {
-        OptionalDouble(value).map(_ + modifier) shouldBe (value + modifier)
-        OptionalDouble(value).map(_ - modifier) shouldBe (value - modifier)
-        OptionalDouble(value).map(_ * modifier) shouldBe (value * modifier)
-        OptionalDouble(value).map(_ / modifier) shouldBe (value / modifier)
-        OptionalDouble(value).map(_ % modifier) shouldBe (value % modifier)
-        OptionalDouble(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalDouble(value).map(_ + modifier).get shouldBe (value + modifier)
+        OptionalDouble(value).map(_ - modifier).get shouldBe (value - modifier)
+        OptionalDouble(value).map(_ * modifier).get shouldBe (value * modifier)
+        OptionalDouble(value).map(_ / modifier).get shouldBe (value / modifier)
+        OptionalDouble(value).map(_ % modifier).get shouldBe (value % modifier)
+        OptionalDouble(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
       }
     }
   }

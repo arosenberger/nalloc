@@ -13,10 +13,10 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalLong.empty.map(_ + 1.toByte) shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1.toShort) shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1) shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1L) shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1.toByte).get shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1.toShort).get shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1).get shouldBe Long.MinValue
+    OptionalLong.empty.map(_ + 1L).get shouldBe Long.MinValue
     OptionalLong.empty.map(_ + 1f).isNaN shouldBe true
     OptionalLong.empty.map(_ + 1d).isNaN shouldBe true
   }
@@ -35,13 +35,13 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
   property("Non empty values map using the passed in function") {
     forAll { (value: Long, modifier: Long) =>
       whenever(value != Long.MinValue && modifier != 0) {
-        OptionalLong(value).map(_ + modifier) shouldBe (value + modifier)
-        OptionalLong(value).map(_ - modifier) shouldBe (value - modifier)
-        OptionalLong(value).map(_ * modifier) shouldBe (value * modifier)
-        OptionalLong(value).map(_ / modifier) shouldBe (value / modifier)
-        OptionalLong(value).map(_ % modifier) shouldBe (value % modifier)
-        OptionalLong(value).map(_ ^ modifier) shouldBe (value ^ modifier)
-        OptionalLong(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalLong(value).map(_ + modifier).get shouldBe (value + modifier)
+        OptionalLong(value).map(_ - modifier).get shouldBe (value - modifier)
+        OptionalLong(value).map(_ * modifier).get shouldBe (value * modifier)
+        OptionalLong(value).map(_ / modifier).get shouldBe (value / modifier)
+        OptionalLong(value).map(_ % modifier).get shouldBe (value % modifier)
+        OptionalLong(value).map(_ ^ modifier).get shouldBe (value ^ modifier)
+        OptionalLong(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
       }
     }
   }
