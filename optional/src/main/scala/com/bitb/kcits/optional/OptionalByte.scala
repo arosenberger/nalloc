@@ -16,7 +16,7 @@ final class OptionalByte(val value: Byte) extends AnyVal {
   def isMinValue = value == -127
   def isMaxValue = value == 127
 
-  def map[T: OptionalResolver](f: Byte => T): OptionalResolver[T]#OptionalType = macro OptionalMacros.map_impl[Byte, T]
+  def map[T](f: Byte => T)(implicit x: OptionalResolver[T]): x.OptionalType = macro OptionalMacros.map_impl[Byte, T]
   def foreach(f: Byte => Unit): Unit = macro OptionalMacros.foreach_impl[Byte]
   def exists(f: Byte => Boolean): Boolean = macro OptionalMacros.exists_impl[Byte]
   def filter(f: Byte => Boolean): OptionalByte = macro OptionalMacros.filter_impl[Byte]

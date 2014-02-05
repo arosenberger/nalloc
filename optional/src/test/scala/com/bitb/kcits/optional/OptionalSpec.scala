@@ -7,19 +7,19 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
 
   property("The empty value does not unapply") {
     (null: String) match {
-      case Optional(x) => fail(s"Empty value unapplied to $x")
+      case Optional(x) => fail(s"Empty value unapplied to ")
       case _           =>
     }
   }
 
   property("The empty value maps to the empty value of its target type") {
-    Optional(null: String).map(_.toByte) shouldBe Byte.MinValue
-    Optional(null: String).map(_.toShort) shouldBe Short.MinValue
-    Optional(null: String).map(_.toInt) shouldBe Int.MinValue
-    Optional(null: String).map(_.toLong) shouldBe Long.MinValue
+    Optional(null: String).map(_.toByte).get shouldBe Byte.MinValue
+    Optional(null: String).map(_.toShort).get shouldBe Short.MinValue
+    Optional(null: String).map(_.toInt).get shouldBe Int.MinValue
+    Optional(null: String).map(_.toLong).get shouldBe Long.MinValue
     Optional(null: String).map(_.toFloat).isNaN shouldBe true
     Optional(null: String).map(_.toDouble).isNaN shouldBe true
-    Optional(null: String).map(_ + "foo") shouldBe null
+    Optional(null: String).map(_ + "foo").get shouldBe (null: String)
   }
 
   property("Non empty values unapply to themselves") {
@@ -36,7 +36,7 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
   property("Non empty values map using the passed in function") {
     forAll { (value: Int, modifier: String) =>
       whenever(modifier != null) {
-        Optional(value.toString).map(_ + modifier) shouldBe (value.toString + modifier)
+        Optional(value.toString).map(_ + modifier).get shouldBe (value.toString + modifier)
       }
     }
   }

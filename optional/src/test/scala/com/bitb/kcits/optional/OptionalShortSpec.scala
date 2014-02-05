@@ -13,10 +13,10 @@ class OptionalShortSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalShort.empty.map(_ + 1.toShort) shouldBe Int.MinValue
-    OptionalShort.empty.map(_ + 1.toShort) shouldBe Int.MinValue
-    OptionalShort.empty.map(_ + 1) shouldBe Int.MinValue
-    OptionalShort.empty.map(_ + 1L) shouldBe Long.MinValue
+    OptionalShort.empty.map(_ + 1.toShort).get shouldBe Int.MinValue
+    OptionalShort.empty.map(_ + 1.toShort).get shouldBe Int.MinValue
+    OptionalShort.empty.map(_ + 1).get shouldBe Int.MinValue
+    OptionalShort.empty.map(_ + 1L).get shouldBe Long.MinValue
     OptionalShort.empty.map(_ + 1f).isNaN shouldBe true
     OptionalShort.empty.map(_ + 1d).isNaN shouldBe true
   }
@@ -35,13 +35,13 @@ class OptionalShortSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   property("Non empty values map using the passed in function") {
     forAll { (value: Short, modifier: Short) =>
       whenever(value != Short.MinValue && modifier != 0) {
-        OptionalShort(value).map(_ + modifier) shouldBe (value + modifier)
-        OptionalShort(value).map(_ - modifier) shouldBe (value - modifier)
-        OptionalShort(value).map(_ * modifier) shouldBe (value * modifier)
-        OptionalShort(value).map(_ / modifier) shouldBe (value / modifier)
-        OptionalShort(value).map(_ % modifier) shouldBe (value % modifier)
-        OptionalShort(value).map(_ ^ modifier) shouldBe (value ^ modifier)
-        OptionalShort(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalShort(value).map(_ + modifier).get shouldBe (value + modifier)
+        OptionalShort(value).map(_ - modifier).get shouldBe (value - modifier)
+        OptionalShort(value).map(_ * modifier).get shouldBe (value * modifier)
+        OptionalShort(value).map(_ / modifier).get shouldBe (value / modifier)
+        OptionalShort(value).map(_ % modifier).get shouldBe (value % modifier)
+        OptionalShort(value).map(_ ^ modifier).get shouldBe (value ^ modifier)
+        OptionalShort(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
       }
     }
   }

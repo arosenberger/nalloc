@@ -15,7 +15,7 @@ final class OptionalInt(val value: Int) extends AnyVal {
   def isMinValue = value == -2147483647
   def isMaxValue = value == 2147483647
 
-  def map[T: OptionalResolver](f: Int => T): OptionalResolver[T]#OptionalType = macro OptionalMacros.map_impl[Int, T]
+  def map[T](f: Int => T)(implicit x: OptionalResolver[T]): x.OptionalType = macro OptionalMacros.map_impl[Int, T]
   def foreach(f: Int => Unit): Unit = macro OptionalMacros.foreach_impl[Int]
   def exists(f: Int => Boolean): Boolean = macro OptionalMacros.exists_impl[Int]
   def filter(f: Int => Boolean): OptionalInt = macro OptionalMacros.filter_impl[Int]

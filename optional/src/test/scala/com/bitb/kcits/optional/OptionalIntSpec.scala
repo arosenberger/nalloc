@@ -13,10 +13,10 @@ class OptionalIntSpec extends PropSpec with Matchers with GeneratorDrivenPropert
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalInt.empty.map(_ + 1.toByte) shouldBe Int.MinValue
-    OptionalInt.empty.map(_ + 1.toShort) shouldBe Int.MinValue
-    OptionalInt.empty.map(_ + 1) shouldBe Int.MinValue
-    OptionalInt.empty.map(_ + 1L) shouldBe Long.MinValue
+    OptionalInt.empty.map(_ + 1.toByte).get shouldBe Int.MinValue
+    OptionalInt.empty.map(_ + 1.toShort).get shouldBe Int.MinValue
+    OptionalInt.empty.map(_ + 1).get shouldBe Int.MinValue
+    OptionalInt.empty.map(_ + 1L).get shouldBe Long.MinValue
     OptionalInt.empty.map(_ + 1f).isNaN shouldBe true
     OptionalInt.empty.map(_ + 1d).isNaN shouldBe true
   }
@@ -35,13 +35,13 @@ class OptionalIntSpec extends PropSpec with Matchers with GeneratorDrivenPropert
   property("Non empty values map using the passed in function") {
     forAll { (value: Int, modifier: Int) =>
       whenever(value != Int.MinValue && modifier != 0) {
-        OptionalInt(value).map(_ + modifier) shouldBe (value + modifier)
-        OptionalInt(value).map(_ - modifier) shouldBe (value - modifier)
-        OptionalInt(value).map(_ * modifier) shouldBe (value * modifier)
-        OptionalInt(value).map(_ / modifier) shouldBe (value / modifier)
-        OptionalInt(value).map(_ % modifier) shouldBe (value % modifier)
-        OptionalInt(value).map(_ ^ modifier) shouldBe (value ^ modifier)
-        OptionalInt(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalInt(value).map(_ + modifier).get shouldBe (value + modifier)
+        OptionalInt(value).map(_ - modifier).get shouldBe (value - modifier)
+        OptionalInt(value).map(_ * modifier).get shouldBe (value * modifier)
+        OptionalInt(value).map(_ / modifier).get shouldBe (value / modifier)
+        OptionalInt(value).map(_ % modifier).get shouldBe (value % modifier)
+        OptionalInt(value).map(_ ^ modifier).get shouldBe (value ^ modifier)
+        OptionalInt(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
       }
     }
   }

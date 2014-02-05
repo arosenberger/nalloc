@@ -43,7 +43,7 @@ object MapMemoryUsage extends MemoryUsageApp {
       case _               =>
     }
 
-    if (OptionalLong(10).map(_ + 5) != 15) sys.error("")
+    if (OptionalLong(10).map(_ + 5).get != 15) sys.error("")
     if (customOptionValues(0) != 0) sys.error("")
     initMemory()
   }
@@ -60,9 +60,9 @@ object MapMemoryUsage extends MemoryUsageApp {
       }
 
       (i % 3: @switch) match {
-        case 0 => sum += OptionalLong(optional).map(_ + i)
-        case 1 => sum += OptionalLong(optional).map(_ * i)
-        case 2 => sum += OptionalLong(optional).map(_ - i)
+        case 0 => sum += OptionalLong(optional).map(_ + i).get
+        case 1 => sum += OptionalLong(optional).map(_ * i).get
+        case 2 => sum += OptionalLong(optional).map(_ - i).get
       }
 
       i += 1

@@ -34,12 +34,12 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   property("Non empty values map using the passed in function") {
     forAll(smallFloat, smallFloat) { (value: Float, modifier: Float) =>
       whenever(modifier != 0) {
-        OptionalFloat(value).map(_ + modifier) shouldBe (value + modifier)
-        OptionalFloat(value).map(_ - modifier) shouldBe (value - modifier)
-        OptionalFloat(value).map(_ * modifier) shouldBe (value * modifier)
-        OptionalFloat(value).map(_ / modifier) shouldBe (value / modifier)
-        OptionalFloat(value).map(_ % modifier) shouldBe (value % modifier)
-        OptionalFloat(value).map(v => math.pow(v, modifier)) shouldBe math.pow(value, modifier)
+        OptionalFloat(value).map(_ + modifier).get shouldBe (value + modifier)
+        OptionalFloat(value).map(_ - modifier).get shouldBe (value - modifier)
+        OptionalFloat(value).map(_ * modifier).get shouldBe (value * modifier)
+        OptionalFloat(value).map(_ / modifier).get shouldBe (value / modifier)
+        OptionalFloat(value).map(_ % modifier).get shouldBe (value % modifier)
+        OptionalFloat(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
       }
     }
   }
