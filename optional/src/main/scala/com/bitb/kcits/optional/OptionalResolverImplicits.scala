@@ -2,7 +2,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros.OptionalResolver
 
-trait OptionalImplicits {
+trait OptionalResolverImplicits {
   implicit object OptionalByteResolver extends OptionalResolver[Byte] {
     type OptionalType = OptionalByte
   }
@@ -27,7 +27,7 @@ trait OptionalImplicits {
     type OptionalType = OptionalDouble
   }
 
-  implicit def OptionalRefResolver[A >: Null <: AnyRef]: OptionalResolver[A] { type OptionalType = Optional[A] } = new OptionalResolver[A] {
+  implicit def OptionalRefResolver[A >: Null <: AnyRef]: OptionalResolver[A] {type OptionalType = Optional[A]} = new OptionalResolver[A] {
     type OptionalType = Optional[A]
   }
 }

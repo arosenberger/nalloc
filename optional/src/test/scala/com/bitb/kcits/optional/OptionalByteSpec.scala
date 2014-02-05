@@ -3,7 +3,8 @@ package com.bitb.kcits.optional
 import org.scalatest._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 
-class OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
+class
+OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
 
   property("The empty value does not unapply") {
     Byte.MinValue match {
@@ -13,12 +14,14 @@ class OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenProper
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalByte.empty.map(_ + 1.toByte).get shouldBe Int.MinValue
-    OptionalByte.empty.map(_ + 1.toShort).get shouldBe Int.MinValue
-    OptionalByte.empty.map(_ + 1).get shouldBe Int.MinValue
-    OptionalByte.empty.map(_ + 1L).get shouldBe Long.MinValue
-    OptionalByte.empty.map(_ + 1f).isNaN shouldBe true
-    OptionalByte.empty.map(_ + 1d).isNaN shouldBe true
+    OptionalByte.empty.map(x => x) shouldBe OptionalByte.empty
+    OptionalByte.empty.map(_.toShort) shouldBe OptionalShort.empty
+    OptionalByte.empty.map(_ + 1.toByte) shouldBe OptionalInt.empty
+    OptionalByte.empty.map(_ + 1.toShort) shouldBe OptionalInt.empty
+    OptionalByte.empty.map(_ + 1) shouldBe OptionalInt.empty
+    OptionalByte.empty.map(_ + 1L) shouldBe OptionalLong.empty
+    OptionalByte.empty.map(_ + 1f).isEmpty shouldBe true
+    OptionalByte.empty.map(_ + 1d).isEmpty shouldBe true
   }
 
   property("Non empty values unapply to themselves") {

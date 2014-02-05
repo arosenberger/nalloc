@@ -2,7 +2,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalLong extends OptionalImplicits {
+object OptionalLong extends OptionalResolverImplicits {
   final def empty: OptionalLong = new OptionalLong(0x8000000000000000L)
   final def apply(value: Long): OptionalLong = new OptionalLong(value)
   final def unapply(value: Long): OptionalLong = new OptionalLong(value)

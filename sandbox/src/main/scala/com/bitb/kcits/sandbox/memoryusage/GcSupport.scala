@@ -1,9 +1,8 @@
 package com.bitb.kcits.sandbox.memoryusage
 
-import com.bitb.kcits.optional.OptionalImplicits
 import java.lang.management.ManagementFactory
 
-trait GcSupport extends OptionalImplicits {
+trait GcSupport {
   final private[this] var gcCount = 0L
 
   final protected def forceGc() {

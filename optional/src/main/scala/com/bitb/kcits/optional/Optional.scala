@@ -2,7 +2,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object Optional extends OptionalImplicits {
+object Optional extends OptionalResolverImplicits {
   final private[this] val None = new Optional[Null](null)
 
   def empty[A >: Null]: Optional[A] = None
@@ -19,6 +19,4 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
   def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
   def orElse(f: => A): A = macro OptionalMacros.getOrElse_impl[A]
-
-  override def toString = s"$value"
 }

@@ -14,12 +14,15 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
-    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
-    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
-    OptionalDouble.empty.map(_ + 1).isNaN shouldBe true
-    OptionalDouble.empty.map(_ + 1f).isNaN shouldBe true
-    OptionalDouble.empty.map(_ + 1d).isNaN shouldBe true
+    OptionalDouble.empty.map(_.toByte).isEmpty shouldBe true
+    OptionalDouble.empty.map(_.toShort).isEmpty shouldBe true
+    OptionalDouble.empty.map(_.toInt).isEmpty shouldBe true
+    OptionalDouble.empty.map(_.toLong).isEmpty shouldBe true
+    OptionalDouble.empty.map(_ + 1.toByte).isEmpty shouldBe true
+    OptionalDouble.empty.map(_ + 1.toShort).isEmpty shouldBe true
+    OptionalDouble.empty.map(_ + 1).isEmpty shouldBe true
+    OptionalDouble.empty.map(_ + 1f).isEmpty shouldBe true
+    OptionalDouble.empty.map(_ + 1d).isEmpty shouldBe true
   }
 
   property("Non empty values unapply to themselves") {

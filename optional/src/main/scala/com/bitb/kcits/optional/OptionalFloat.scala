@@ -2,7 +2,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalFloat extends OptionalImplicits {
+object OptionalFloat extends OptionalResolverImplicits {
   final def empty: OptionalFloat = new OptionalFloat(java.lang.Float.NaN)
   final def apply(value: Float): OptionalFloat = new OptionalFloat(value)
   final def unapply(value: Float): OptionalFloat = new OptionalFloat(value)
@@ -11,7 +11,7 @@ object OptionalFloat extends OptionalImplicits {
 final class OptionalFloat(val value: Float) extends AnyVal {
   def isEmpty = value != value
   def get: Float = value
-  def isNaN = value.isNaN
+  def isNaN = value != value
 
   def isMinValue = value == java.lang.Float.MIN_VALUE
   def isMaxValue = value == java.lang.Float.MAX_VALUE

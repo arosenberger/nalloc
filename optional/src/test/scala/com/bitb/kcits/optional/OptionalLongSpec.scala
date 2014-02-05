@@ -13,12 +13,15 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalLong.empty.map(_ + 1.toByte).get shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1.toShort).get shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1).get shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1L).get shouldBe Long.MinValue
-    OptionalLong.empty.map(_ + 1f).isNaN shouldBe true
-    OptionalLong.empty.map(_ + 1d).isNaN shouldBe true
+    OptionalLong.empty.map(_.toByte) shouldBe OptionalByte.empty
+    OptionalLong.empty.map(_.toShort) shouldBe OptionalShort.empty
+    OptionalLong.empty.map(_.toInt) shouldBe OptionalInt.empty
+    OptionalLong.empty.map(_ + 1.toByte) shouldBe OptionalLong.empty
+    OptionalLong.empty.map(_ + 1.toShort) shouldBe OptionalLong.empty
+    OptionalLong.empty.map(_ + 1) shouldBe OptionalLong.empty
+    OptionalLong.empty.map(_ + 1L) shouldBe OptionalLong.empty
+    OptionalLong.empty.map(_ + 1f).isEmpty shouldBe true
+    OptionalLong.empty.map(_ + 1d).isEmpty shouldBe true
   }
 
   property("Non empty values unapply to themselves") {

@@ -2,7 +2,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalDouble extends OptionalImplicits {
+object OptionalDouble extends OptionalResolverImplicits {
   final def empty: OptionalDouble = new OptionalDouble(java.lang.Double.NaN)
   final def apply(value: Double): OptionalDouble = new OptionalDouble(value)
   final def unapply(value: Double): OptionalDouble = new OptionalDouble(value)
@@ -11,7 +11,7 @@ object OptionalDouble extends OptionalImplicits {
 final class OptionalDouble(val value: Double) extends AnyVal {
   def isEmpty = value != value
   def get: Double = value
-  def isNaN = value.isNaN
+  def isNaN = value != value
 
   def isMinValue = value == java.lang.Double.MIN_VALUE
   def isMaxValue = value == java.lang.Double.MAX_VALUE

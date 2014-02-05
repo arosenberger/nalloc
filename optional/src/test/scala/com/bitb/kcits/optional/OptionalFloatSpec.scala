@@ -14,12 +14,16 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalFloat.empty.map(_ + 1.toByte).isNaN shouldBe true
-    OptionalFloat.empty.map(_ + 1.toShort).isNaN shouldBe true
-    OptionalFloat.empty.map(_ + 1).isNaN shouldBe true
-    OptionalFloat.empty.map(_ + 1L).isNaN shouldBe true
-    OptionalFloat.empty.map(_ + 1f).isNaN shouldBe true
-    OptionalFloat.empty.map(_ + 1d).isNaN shouldBe true
+    OptionalFloat.empty.map(_.toByte).isEmpty shouldBe true
+    OptionalFloat.empty.map(_.toShort).isEmpty shouldBe true
+    OptionalFloat.empty.map(_.toInt).isEmpty shouldBe true
+    OptionalFloat.empty.map(_.toLong).isEmpty shouldBe true
+    OptionalFloat.empty.map(_ + 1.toShort).isEmpty shouldBe true
+    OptionalFloat.empty.map(_ + 1.toByte).isEmpty shouldBe true
+    OptionalFloat.empty.map(_ + 1).isEmpty shouldBe true
+    OptionalFloat.empty.map(_ + 1L).isEmpty shouldBe true
+    OptionalFloat.empty.map(_ + 1f).isEmpty shouldBe true
+    OptionalFloat.empty.map(_ + 1d).isEmpty shouldBe true
   }
 
   property("Non empty values unapply to themselves") {

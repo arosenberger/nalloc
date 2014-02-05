@@ -2,7 +2,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalShort extends OptionalImplicits {
+object OptionalShort extends OptionalResolverImplicits {
   final def empty: OptionalShort = new OptionalShort(-32768)
   final def apply(value: Short): OptionalShort = new OptionalShort(value)
   final def unapply(value: Short): OptionalShort = new OptionalShort(value)

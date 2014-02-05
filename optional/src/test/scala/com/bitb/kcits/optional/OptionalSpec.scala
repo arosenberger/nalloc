@@ -13,12 +13,12 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
   }
 
   property("The empty value maps to the empty value of its target type") {
-    Optional(null: String).map(_.toByte).get shouldBe Byte.MinValue
-    Optional(null: String).map(_.toShort).get shouldBe Short.MinValue
-    Optional(null: String).map(_.toInt).get shouldBe Int.MinValue
-    Optional(null: String).map(_.toLong).get shouldBe Long.MinValue
-    Optional(null: String).map(_.toFloat).isNaN shouldBe true
-    Optional(null: String).map(_.toDouble).isNaN shouldBe true
+    Optional(null: String).map(_.toByte) shouldBe OptionalByte.empty
+    Optional(null: String).map(_.toShort) shouldBe OptionalShort.empty
+    Optional(null: String).map(_.toInt) shouldBe OptionalInt.empty
+    Optional(null: String).map(_.toLong) shouldBe OptionalLong.empty
+    Optional(null: String).map(_.toFloat).isEmpty shouldBe true
+    Optional(null: String).map(_.toDouble).isEmpty shouldBe true
     Optional(null: String).map(_ + "foo").get shouldBe (null: String)
   }
 

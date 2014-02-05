@@ -1,3 +1,3 @@
 package com.bitb.kcits
 
-package object optional extends OptionalImplicits
+package object optional extends OptionalResolverImplicits
