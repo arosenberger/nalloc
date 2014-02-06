@@ -35,10 +35,12 @@ Pattern matching is similar to that of Scala's `Option` type
 
 ####Higher Order Functions
 
-The following functions are currently available in the master branch. They all offer the same guarantees:
+Each higher order function offers the same functionality:
 - Primitives will not box to their object counterparts
 - None of the OptionalX instances will allocate, subject to the limitations described in http://docs.scala-lang.org/overviews/core/value-classes.html
-- No anonymous functions / closures will be created for the lambas or method values passed into the higher order functions
+- No anonymous functions / closures will be created for the lambdas or method values passed into the higher order functions
+
+The following functions are currently available in the master branch:
 
 - `map[B](f: A => B): OptionalTypeForB` If `A`'s value is the sentinel for that type, the function is not applied and instead the empty OptionalTypeB is returned
 ```
