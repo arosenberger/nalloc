@@ -1,10 +1,8 @@
 package com.bitb.kcits.optional
 
-import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalacheck.Arbitrary._
 
-class
-OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
+class OptionalByteSpec extends OptionalTypeSuite {
 
   property("The empty value does not unapply") {
     Byte.MinValue match {
@@ -14,14 +12,17 @@ OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChec
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalByte.empty.map(x => x) shouldBe OptionalByte.empty
-    OptionalByte.empty.map(_.toShort) shouldBe OptionalShort.empty
-    OptionalByte.empty.map(_ + 1.toByte) shouldBe OptionalInt.empty
-    OptionalByte.empty.map(_ + 1.toShort) shouldBe OptionalInt.empty
-    OptionalByte.empty.map(_ + 1) shouldBe OptionalInt.empty
-    OptionalByte.empty.map(_ + 1L) shouldBe OptionalLong.empty
-    OptionalByte.empty.map(_ + 1f).isEmpty shouldBe true
-    OptionalByte.empty.map(_ + 1d).isEmpty shouldBe true
+    forAll(mapFunctionsFrom[Byte]) { functions =>
+      import functions._
+
+      OptionalByte.empty.map(mapToByte) shouldBe OptionalByte.empty
+      OptionalByte.empty.map(mapToShort) shouldBe OptionalShort.empty
+      OptionalByte.empty.map(mapToInt) shouldBe OptionalInt.empty
+      OptionalByte.empty.map(mapToLong) shouldBe OptionalLong.empty
+      OptionalByte.empty.map(mapToFloat).isEmpty shouldBe true
+      OptionalByte.empty.map(mapToDouble).isEmpty shouldBe true
+      OptionalByte.empty.map(mapToString) shouldBe Optional.empty[String]
+    }
   }
 
   property("Non empty values unapply to themselves") {
@@ -36,15 +37,17 @@ OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChec
   }
 
   property("Non empty values map using the passed in function") {
-    forAll { (value: Byte, modifier: Byte) =>
-      whenever(value != Byte.MinValue && modifier != 0) {
-        OptionalByte(value).map(_ + modifier).get shouldBe (value + modifier)
-        OptionalByte(value).map(_ - modifier).get shouldBe (value - modifier)
-        OptionalByte(value).map(_ * modifier).get shouldBe (value * modifier)
-        OptionalByte(value).map(_ / modifier).get shouldBe (value / modifier)
-        OptionalByte(value).map(_ % modifier).get shouldBe (value % modifier)
-        OptionalByte(value).map(_ ^ modifier).get shouldBe (value ^ modifier)
-        OptionalByte(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
+    forAll(bytes, mapFunctionsFrom[Byte]) { (value, functions) =>
+      whenever(value != Byte.MinValue) {
+        import functions._
+
+        OptionalByte(value).map(mapToByte) shouldBe OptionalByte(mapToByte(value))
+        OptionalByte(value).map(mapToShort) shouldBe OptionalShort(mapToShort(value))
+        OptionalByte(value).map(mapToInt) shouldBe OptionalInt(mapToInt(value))
+        OptionalByte(value).map(mapToLong) shouldBe OptionalLong(mapToLong(value))
+        OptionalByte(value).map(mapToFloat) shouldBe OptionalFloat(mapToFloat(value))
+        OptionalByte(value).map(mapToDouble) shouldBe OptionalDouble(mapToDouble(value))
+        OptionalByte(value).map(mapToString) shouldBe Optional(mapToString(value))
       }
     }
   }
@@ -90,14 +93,44 @@ OptionalByteSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChec
     }
   }
 
-  property("getOrElse on the empty value returns the passed in alternative") {
+  property("orElse on the empty value returns the passed in alternative") {
     OptionalByte.empty.orElse(1.toByte) shouldBe 1
   }
 
-  property("getOrElse on non empty values does not evaluate the passed in function") {
+  property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Byte =>
       whenever(x != Byte.MinValue) {
         OptionalByte(x).orElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
+
+  property("The empty value flatMaps to the empty value of its target type") {
+    forAll(flatMapFunctionsFrom[Byte]) { functions =>
+      import functions._
+
+      OptionalByte.empty.flatMap(mapToOptionalByte) shouldBe OptionalByte.empty
+      OptionalByte.empty.flatMap(mapToOptionalShort) shouldBe OptionalShort.empty
+      OptionalByte.empty.flatMap(mapToOptionalInt) shouldBe OptionalInt.empty
+      OptionalByte.empty.flatMap(mapToOptionalLong) shouldBe OptionalLong.empty
+      OptionalByte.empty.flatMap(mapToOptionalFloat).isEmpty shouldBe true
+      OptionalByte.empty.flatMap(mapToOptionalDouble).isEmpty shouldBe true
+      OptionalByte.empty.flatMap(mapToOptionalString) shouldBe Optional.empty[String]
+    }
+  }
+
+  property("Non empty values flatMap using the passed in function") {
+    forAll(bytes, flatMapFunctionsFrom[Byte]) { (value, functions) =>
+      whenever(value != Byte.MinValue) {
+        import functions._
+
+        OptionalByte(value).flatMap(mapToOptionalByte) shouldBe mapToOptionalByte(value)
+        OptionalByte(value).flatMap(mapToOptionalShort) shouldBe mapToOptionalShort(value)
+        OptionalByte(value).flatMap(mapToOptionalInt) shouldBe mapToOptionalInt(value)
+        OptionalByte(value).flatMap(mapToOptionalLong) shouldBe mapToOptionalLong(value)
+        OptionalByte(value).flatMap(mapToOptionalFloat) shouldBe mapToOptionalFloat(value)
+        OptionalByte(value).flatMap(mapToOptionalDouble) shouldBe mapToOptionalDouble(value)
+        OptionalByte(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
       }
     }
   }

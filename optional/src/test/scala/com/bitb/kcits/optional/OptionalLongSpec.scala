@@ -1,9 +1,6 @@
 package com.bitb.kcits.optional
 
-import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-
-class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
+class OptionalLongSpec extends OptionalTypeSuite {
 
   property("The empty value does not unapply") {
     Long.MinValue match {
@@ -36,19 +33,20 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
   }
 
   property("Non empty values map using the passed in function") {
-    forAll { (value: Long, modifier: Long) =>
-      whenever(value != Long.MinValue && modifier != 0) {
-        OptionalLong(value).map(_ + modifier).get shouldBe (value + modifier)
-        OptionalLong(value).map(_ - modifier).get shouldBe (value - modifier)
-        OptionalLong(value).map(_ * modifier).get shouldBe (value * modifier)
-        OptionalLong(value).map(_ / modifier).get shouldBe (value / modifier)
-        OptionalLong(value).map(_ % modifier).get shouldBe (value % modifier)
-        OptionalLong(value).map(_ ^ modifier).get shouldBe (value ^ modifier)
-        OptionalLong(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
+    forAll(longs, mapFunctionsFrom[Long]) { (value, functions) =>
+      whenever(value != Long.MinValue) {
+        import functions._
+
+        OptionalLong(value).map(mapToByte) shouldBe OptionalByte(mapToByte(value))
+        OptionalLong(value).map(mapToShort) shouldBe OptionalShort(mapToShort(value))
+        OptionalLong(value).map(mapToInt) shouldBe OptionalInt(mapToInt(value))
+        OptionalLong(value).map(mapToLong) shouldBe OptionalLong(mapToLong(value))
+        OptionalLong(value).map(mapToFloat) shouldBe OptionalFloat(mapToFloat(value))
+        OptionalLong(value).map(mapToDouble) shouldBe OptionalDouble(mapToDouble(value))
+        OptionalLong(value).map(mapToString) shouldBe Optional(mapToString(value))
       }
     }
   }
-
   property("foreach on the empty value is a no-op") {
     OptionalLong.empty.foreach(_ => fail())
   }
@@ -90,14 +88,44 @@ class OptionalLongSpec extends PropSpec with Matchers with GeneratorDrivenProper
     }
   }
 
-  property("getOrElse on the empty value returns the passed in alternative") {
+  property("orElse on the empty value returns the passed in alternative") {
     OptionalLong.empty.orElse(1.toByte) shouldBe 1
   }
 
-  property("getOrElse on non empty values does not evaluate the passed in function") {
+  property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Long =>
       whenever(x != Long.MinValue) {
         OptionalLong(x).orElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
+
+  property("The empty value flatMaps to the empty value of its target type") {
+    forAll(flatMapFunctionsFrom[Long]) { functions =>
+      import functions._
+
+      OptionalLong.empty.flatMap(mapToOptionalByte) shouldBe OptionalByte.empty
+      OptionalLong.empty.flatMap(mapToOptionalShort) shouldBe OptionalShort.empty
+      OptionalLong.empty.flatMap(mapToOptionalInt) shouldBe OptionalInt.empty
+      OptionalLong.empty.flatMap(mapToOptionalLong) shouldBe OptionalLong.empty
+      OptionalLong.empty.flatMap(mapToOptionalFloat).isEmpty shouldBe true
+      OptionalLong.empty.flatMap(mapToOptionalDouble).isEmpty shouldBe true
+      OptionalLong.empty.flatMap(mapToOptionalString) shouldBe Optional.empty[String]
+    }
+  }
+
+  property("Non empty values flatMap using the passed in function") {
+    forAll(longs, flatMapFunctionsFrom[Long]) { (value, functions) =>
+      whenever(value != Long.MinValue) {
+        import functions._
+
+        OptionalLong(value).flatMap(mapToOptionalByte) shouldBe mapToOptionalByte(value)
+        OptionalLong(value).flatMap(mapToOptionalShort) shouldBe mapToOptionalShort(value)
+        OptionalLong(value).flatMap(mapToOptionalInt) shouldBe mapToOptionalInt(value)
+        OptionalLong(value).flatMap(mapToOptionalLong) shouldBe mapToOptionalLong(value)
+        OptionalLong(value).flatMap(mapToOptionalFloat) shouldBe mapToOptionalFloat(value)
+        OptionalLong(value).flatMap(mapToOptionalDouble) shouldBe mapToOptionalDouble(value)
+        OptionalLong(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
       }
     }
   }

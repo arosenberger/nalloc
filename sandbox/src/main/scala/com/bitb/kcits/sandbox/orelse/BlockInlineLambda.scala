@@ -28,4 +28,8 @@ class BlockInlineLambda extends Inspectable {
     val y = 5
     y * 3
   }
+  private[this] val stInlineComplex = st.orElse {
+    val y = "foo"
+    y + y
+  }
 }

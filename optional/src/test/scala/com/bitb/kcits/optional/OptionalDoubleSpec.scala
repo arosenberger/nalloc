@@ -1,10 +1,6 @@
 package com.bitb.kcits.optional
 
-import org.scalacheck.Gen
-import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-
-class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
+class OptionalDoubleSpec extends OptionalTypeSuite {
 
   property("The empty value does not unapply") {
     Double.NaN match {
@@ -13,17 +9,21 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
     }
   }
 
+
   property("The empty value maps to the empty value of its target type") {
-    OptionalDouble.empty.map(_.toByte).isEmpty shouldBe true
-    OptionalDouble.empty.map(_.toShort).isEmpty shouldBe true
-    OptionalDouble.empty.map(_.toInt).isEmpty shouldBe true
-    OptionalDouble.empty.map(_.toLong).isEmpty shouldBe true
-    OptionalDouble.empty.map(_ + 1.toByte).isEmpty shouldBe true
-    OptionalDouble.empty.map(_ + 1.toShort).isEmpty shouldBe true
-    OptionalDouble.empty.map(_ + 1).isEmpty shouldBe true
-    OptionalDouble.empty.map(_ + 1f).isEmpty shouldBe true
-    OptionalDouble.empty.map(_ + 1d).isEmpty shouldBe true
+    forAll(mapFunctionsFrom[Double]) { functions =>
+      import functions._
+
+      OptionalDouble.empty.map(mapToByte) shouldBe OptionalByte.empty
+      OptionalDouble.empty.map(mapToShort) shouldBe OptionalShort.empty
+      OptionalDouble.empty.map(mapToInt) shouldBe OptionalInt.empty
+      OptionalDouble.empty.map(mapToLong) shouldBe OptionalLong.empty
+      OptionalDouble.empty.map(mapToFloat).isEmpty shouldBe true
+      OptionalDouble.empty.map(mapToDouble).isEmpty shouldBe true
+      OptionalDouble.empty.map(mapToString) shouldBe Optional.empty[String]
+    }
   }
+
 
   property("Non empty values unapply to themselves") {
     forAll { x: Double =>
@@ -35,18 +35,18 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
   }
 
   property("Non empty values map using the passed in function") {
-    forAll(smallDouble, smallDouble) { (value: Double, modifier: Double) =>
-      whenever(modifier != 0) {
-        OptionalDouble(value).map(_ + modifier).get shouldBe (value + modifier)
-        OptionalDouble(value).map(_ - modifier).get shouldBe (value - modifier)
-        OptionalDouble(value).map(_ * modifier).get shouldBe (value * modifier)
-        OptionalDouble(value).map(_ / modifier).get shouldBe (value / modifier)
-        OptionalDouble(value).map(_ % modifier).get shouldBe (value % modifier)
-        OptionalDouble(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
-      }
+    forAll(doubles, mapFunctionsFrom[Double]) { (value, functions) =>
+      import functions._
+
+      OptionalDouble(value).map(mapToByte) shouldBe OptionalByte(mapToByte(value))
+      OptionalDouble(value).map(mapToShort) shouldBe OptionalShort(mapToShort(value))
+      OptionalDouble(value).map(mapToInt) shouldBe OptionalInt(mapToInt(value))
+      OptionalDouble(value).map(mapToLong) shouldBe OptionalLong(mapToLong(value))
+      OptionalDouble(value).map(mapToFloat) shouldBe OptionalFloat(mapToFloat(value))
+      OptionalDouble(value).map(mapToDouble) shouldBe OptionalDouble(mapToDouble(value))
+      OptionalDouble(value).map(mapToString) shouldBe Optional(mapToString(value))
     }
   }
-
   property("foreach on the empty value is a no-op") {
     OptionalDouble.empty.foreach(_ => fail())
   }
@@ -82,15 +82,41 @@ class OptionalDoubleSpec extends PropSpec with Matchers with GeneratorDrivenProp
     }
   }
 
-  property("getOrElse on the empty value returns the passed in alternative") {
+  property("orElse on the empty value returns the passed in alternative") {
     OptionalDouble.empty.orElse(1.toByte) shouldBe 1
   }
 
-  property("getOrElse on non empty values does not evaluate the passed in function") {
+  property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Double =>
       OptionalDouble(x).orElse(throw new IllegalArgumentException) shouldBe x
     }
   }
 
-  private def smallDouble: Gen[Double] = Gen.choose(0, 1000).map(_ * 1d)
+  property("The empty value flatMaps to the empty value of its target type") {
+    forAll(flatMapFunctionsFrom[Double]) { functions =>
+      import functions._
+
+      OptionalDouble.empty.flatMap(mapToOptionalByte) shouldBe OptionalByte.empty
+      OptionalDouble.empty.flatMap(mapToOptionalShort) shouldBe OptionalShort.empty
+      OptionalDouble.empty.flatMap(mapToOptionalInt) shouldBe OptionalInt.empty
+      OptionalDouble.empty.flatMap(mapToOptionalLong) shouldBe OptionalLong.empty
+      OptionalDouble.empty.flatMap(mapToOptionalFloat).isEmpty shouldBe true
+      OptionalDouble.empty.flatMap(mapToOptionalDouble).isEmpty shouldBe true
+      OptionalDouble.empty.flatMap(mapToOptionalString) shouldBe Optional.empty[String]
+    }
+  }
+
+  property("Non empty values flatMap using the passed in function") {
+    forAll(doubles, flatMapFunctionsFrom[Double]) { (value, functions) =>
+      import functions._
+
+      OptionalDouble(value).flatMap(mapToOptionalByte) shouldBe mapToOptionalByte(value)
+      OptionalDouble(value).flatMap(mapToOptionalShort) shouldBe mapToOptionalShort(value)
+      OptionalDouble(value).flatMap(mapToOptionalInt) shouldBe mapToOptionalInt(value)
+      OptionalDouble(value).flatMap(mapToOptionalLong) shouldBe mapToOptionalLong(value)
+      OptionalDouble(value).flatMap(mapToOptionalFloat) shouldBe mapToOptionalFloat(value)
+      OptionalDouble(value).flatMap(mapToOptionalDouble) shouldBe mapToOptionalDouble(value)
+      OptionalDouble(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
+    }
+  }
 }

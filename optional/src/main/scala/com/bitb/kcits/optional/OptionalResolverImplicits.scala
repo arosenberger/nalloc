@@ -1,6 +1,6 @@
 package com.bitb.kcits.optional
 
-import com.bitb.kcits.macros.OptionalResolver
+import com.bitb.kcits.macros._
 
 trait OptionalResolverImplicits {
   implicit object OptionalByteResolver extends OptionalResolver[Byte] {
@@ -29,5 +29,33 @@ trait OptionalResolverImplicits {
 
   implicit def OptionalRefResolver[A >: Null <: AnyRef]: OptionalResolver[A] {type OptionalType = Optional[A]} = new OptionalResolver[A] {
     type OptionalType = Optional[A]
+  }
+
+  implicit object ByteResolver extends PrimitiveResolver[OptionalByte] {
+    type PrimitiveType = Byte
+  }
+
+  implicit object ShortResolver extends PrimitiveResolver[OptionalShort] {
+    type PrimitiveType = Short
+  }
+
+  implicit object IntResolver extends PrimitiveResolver[OptionalInt] {
+    type PrimitiveType = Int
+  }
+
+  implicit object LongResolver extends PrimitiveResolver[OptionalLong] {
+    type PrimitiveType = Long
+  }
+
+  implicit object FloatResolver extends PrimitiveResolver[OptionalFloat] {
+    type PrimitiveType = Float
+  }
+
+  implicit object DoubleResolver extends PrimitiveResolver[OptionalDouble] {
+    type PrimitiveType = Double
+  }
+
+  implicit def AnyRefResolver[A >: Null <: AnyRef]: PrimitiveResolver[Optional[A]] {type PrimitiveType = A} = new PrimitiveResolver[Optional[A]] {
+    type PrimitiveType = A
   }
 }

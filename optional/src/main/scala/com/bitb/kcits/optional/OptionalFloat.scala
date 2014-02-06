@@ -17,8 +17,9 @@ final class OptionalFloat(val value: Float) extends AnyVal {
   def isMaxValue = value == java.lang.Float.MAX_VALUE
 
   def map[T](f: Float => T)(implicit x: OptionalResolver[T]): x.OptionalType = macro OptionalMacros.map_impl[Float, T]
+  def flatMap[T](f: Float => T)(implicit x: PrimitiveResolver[T]): T = macro OptionalMacros.flatMap_impl[Float, T]
   def foreach(f: Float => Unit): Unit = macro OptionalMacros.foreach_impl[Float]
   def exists(f: Float => Boolean): Boolean = macro OptionalMacros.exists_impl[Float]
   def filter(f: Float => Boolean): OptionalFloat = macro OptionalMacros.filter_impl[Float]
-  def orElse(f: => Float): Float = macro OptionalMacros.getOrElse_impl[Float]
+  def orElse(f: => Float): Float = macro OptionalMacros.orElse_impl[Float]
 }

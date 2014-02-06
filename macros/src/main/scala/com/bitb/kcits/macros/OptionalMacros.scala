@@ -3,8 +3,12 @@ package com.bitb.kcits.macros
 import scala.language.existentials
 import scala.reflect.macros._
 
-trait OptionalResolver[T] {
+private[kcits] trait OptionalResolver[T] {
   type OptionalType
+}
+
+private[kcits] trait PrimitiveResolver[T] {
+  type PrimitiveType
 }
 
 object OptionalMacros {
@@ -24,6 +28,28 @@ object OptionalMacros {
     new Inliner[c.type](c).inlineAndReset( q"""
     if ($sentinelGuard)
       new $optionalType($f($underlying))
+    else
+      new $optionalType($sentinelTo)
+    """)
+  }
+
+  def flatMap_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B])(x: c.Expr[PrimitiveResolver[B]]): c.Expr[B] = {
+    import c.universe._
+
+    val underlying = underlyingValue[A](c)
+
+    val primitiveType = x.tree.tpe.declarations
+                        .find(x => x.isType && x.name == TypeName("PrimitiveType"))
+                        .map(_.typeSignature)
+                        .getOrElse(c.abort(c.enclosingPosition, "Couldn't determine optional type"))
+
+    val sentinelTo = sentinelValueFor(c)(primitiveType)
+    val sentinelGuard = generateSentinelGuard[A](c)(underlying)
+    val optionalType = c.macroApplication.tpe
+
+    new Inliner[c.type](c).inlineAndReset( q"""
+    if ($sentinelGuard)
+      $f($underlying)
     else
       new $optionalType($sentinelTo)
     """)
@@ -66,7 +92,7 @@ object OptionalMacros {
     """)
   }
 
-  def getOrElse_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A]) = {
+  def orElse_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A]) = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -100,10 +126,13 @@ object OptionalMacros {
     case _                                                                    => false
   }
 
-  private def sentinelValue[X: c.WeakTypeTag](c: BlackboxContext): c.universe.Tree = {
+  private def sentinelValue[X: c.WeakTypeTag](c: BlackboxContext): c.universe.Tree =
+    sentinelValueFor(c)(c.weakTypeTag[X].tpe)
+
+  private def sentinelValueFor(c: BlackboxContext)(underlyingType: c.universe.Type): c.universe.Tree = {
     import c.universe._
 
-    c.weakTypeTag[X].tpe match {
+    underlyingType match {
       case x if x =:= c.WeakTypeTag.Byte.tpe   => q"-128"
       case x if x =:= c.WeakTypeTag.Short.tpe  => q"-32768"
       case x if x =:= c.WeakTypeTag.Int.tpe    => q"-2147483648"

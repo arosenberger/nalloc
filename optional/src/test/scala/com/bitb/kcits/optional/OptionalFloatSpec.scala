@@ -1,10 +1,6 @@
 package com.bitb.kcits.optional
 
-import org.scalacheck.Gen
-import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-
-class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
+class OptionalFloatSpec extends OptionalTypeSuite {
 
   property("The empty value does not unapply") {
     Float.NaN match {
@@ -14,16 +10,17 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("The empty value maps to the empty value of its target type") {
-    OptionalFloat.empty.map(_.toByte).isEmpty shouldBe true
-    OptionalFloat.empty.map(_.toShort).isEmpty shouldBe true
-    OptionalFloat.empty.map(_.toInt).isEmpty shouldBe true
-    OptionalFloat.empty.map(_.toLong).isEmpty shouldBe true
-    OptionalFloat.empty.map(_ + 1.toShort).isEmpty shouldBe true
-    OptionalFloat.empty.map(_ + 1.toByte).isEmpty shouldBe true
-    OptionalFloat.empty.map(_ + 1).isEmpty shouldBe true
-    OptionalFloat.empty.map(_ + 1L).isEmpty shouldBe true
-    OptionalFloat.empty.map(_ + 1f).isEmpty shouldBe true
-    OptionalFloat.empty.map(_ + 1d).isEmpty shouldBe true
+    forAll(mapFunctionsFrom[Float]) { functions =>
+      import functions._
+
+      OptionalFloat.empty.map(mapToByte) shouldBe OptionalByte.empty
+      OptionalFloat.empty.map(mapToShort) shouldBe OptionalShort.empty
+      OptionalFloat.empty.map(mapToInt) shouldBe OptionalInt.empty
+      OptionalFloat.empty.map(mapToLong) shouldBe OptionalLong.empty
+      OptionalFloat.empty.map(mapToFloat).isEmpty shouldBe true
+      OptionalFloat.empty.map(mapToDouble).isEmpty shouldBe true
+      OptionalFloat.empty.map(mapToString) shouldBe Optional.empty[String]
+    }
   }
 
   property("Non empty values unapply to themselves") {
@@ -36,15 +33,16 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
   }
 
   property("Non empty values map using the passed in function") {
-    forAll(smallFloat, smallFloat) { (value: Float, modifier: Float) =>
-      whenever(modifier != 0) {
-        OptionalFloat(value).map(_ + modifier).get shouldBe (value + modifier)
-        OptionalFloat(value).map(_ - modifier).get shouldBe (value - modifier)
-        OptionalFloat(value).map(_ * modifier).get shouldBe (value * modifier)
-        OptionalFloat(value).map(_ / modifier).get shouldBe (value / modifier)
-        OptionalFloat(value).map(_ % modifier).get shouldBe (value % modifier)
-        OptionalFloat(value).map(v => math.pow(v, modifier)).get shouldBe math.pow(value, modifier)
-      }
+    forAll(floats, mapFunctionsFrom[Float]) { (value, functions) =>
+      import functions._
+
+      OptionalFloat(value).map(mapToByte) shouldBe OptionalByte(mapToByte(value))
+      OptionalFloat(value).map(mapToShort) shouldBe OptionalShort(mapToShort(value))
+      OptionalFloat(value).map(mapToInt) shouldBe OptionalInt(mapToInt(value))
+      OptionalFloat(value).map(mapToLong) shouldBe OptionalLong(mapToLong(value))
+      OptionalFloat(value).map(mapToFloat) shouldBe OptionalFloat(mapToFloat(value))
+      OptionalFloat(value).map(mapToDouble) shouldBe OptionalDouble(mapToDouble(value))
+      OptionalFloat(value).map(mapToString) shouldBe Optional(mapToString(value))
     }
   }
 
@@ -83,15 +81,41 @@ class OptionalFloatSpec extends PropSpec with Matchers with GeneratorDrivenPrope
     }
   }
 
-  property("getOrElse on the empty value returns the passed in alternative") {
+  property("orElse on the empty value returns the passed in alternative") {
     OptionalFloat.empty.orElse(1.toByte) shouldBe 1
   }
 
-  property("getOrElse on non empty values does not evaluate the passed in function") {
+  property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Float =>
       OptionalFloat(x).orElse(throw new IllegalArgumentException) shouldBe x
     }
   }
 
-  private def smallFloat: Gen[Float] = Gen.choose(0, 1000).map(_ * 1f)
+  property("The empty value flatMaps to the empty value of its target type") {
+    forAll(flatMapFunctionsFrom[Float]) { functions =>
+      import functions._
+
+      OptionalFloat.empty.flatMap(mapToOptionalByte) shouldBe OptionalByte.empty
+      OptionalFloat.empty.flatMap(mapToOptionalShort) shouldBe OptionalShort.empty
+      OptionalFloat.empty.flatMap(mapToOptionalInt) shouldBe OptionalInt.empty
+      OptionalFloat.empty.flatMap(mapToOptionalLong) shouldBe OptionalLong.empty
+      OptionalFloat.empty.flatMap(mapToOptionalFloat).isEmpty shouldBe true
+      OptionalFloat.empty.flatMap(mapToOptionalDouble).isEmpty shouldBe true
+      OptionalFloat.empty.flatMap(mapToOptionalString) shouldBe Optional.empty[String]
+    }
+  }
+
+  property("Non empty values flatMap using the passed in function") {
+    forAll(floats, flatMapFunctionsFrom[Float]) { (value, functions) =>
+      import functions._
+
+      OptionalFloat(value).flatMap(mapToOptionalByte) shouldBe mapToOptionalByte(value)
+      OptionalFloat(value).flatMap(mapToOptionalShort) shouldBe mapToOptionalShort(value)
+      OptionalFloat(value).flatMap(mapToOptionalInt) shouldBe mapToOptionalInt(value)
+      OptionalFloat(value).flatMap(mapToOptionalLong) shouldBe mapToOptionalLong(value)
+      OptionalFloat(value).flatMap(mapToOptionalFloat) shouldBe mapToOptionalFloat(value)
+      OptionalFloat(value).flatMap(mapToOptionalDouble) shouldBe mapToOptionalDouble(value)
+      OptionalFloat(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
+    }
+  }
 }

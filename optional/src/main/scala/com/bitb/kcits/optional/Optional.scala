@@ -15,8 +15,9 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   def isEmpty = value == null
 
   def map[B](f: A => B)(implicit x: OptionalResolver[B]): x.OptionalType = macro OptionalMacros.map_impl[A, B]
+  def flatMap[B](f: A => B)(implicit x: PrimitiveResolver[B]): B = macro OptionalMacros.flatMap_impl[A, B]
   def foreach(f: A => Unit): Unit = macro OptionalMacros.foreach_impl[A]
   def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
   def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
-  def orElse(f: => A): A = macro OptionalMacros.getOrElse_impl[A]
+  def orElse(f: => A): A = macro OptionalMacros.orElse_impl[A]
 }

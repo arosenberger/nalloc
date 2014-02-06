@@ -1,9 +1,6 @@
 package com.bitb.kcits.optional
 
-import org.scalatest._
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-
-class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyChecks {
+class OptionalSpec extends OptionalTypeSuite {
 
   property("The empty value does not unapply") {
     (null: String) match {
@@ -13,13 +10,17 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
   }
 
   property("The empty value maps to the empty value of its target type") {
-    Optional(null: String).map(_.toByte) shouldBe OptionalByte.empty
-    Optional(null: String).map(_.toShort) shouldBe OptionalShort.empty
-    Optional(null: String).map(_.toInt) shouldBe OptionalInt.empty
-    Optional(null: String).map(_.toLong) shouldBe OptionalLong.empty
-    Optional(null: String).map(_.toFloat).isEmpty shouldBe true
-    Optional(null: String).map(_.toDouble).isEmpty shouldBe true
-    Optional(null: String).map(_ + "foo").get shouldBe (null: String)
+    forAll(mapFunctionsFrom[String]) { functions =>
+      import functions._
+
+      Optional.empty[String].map(mapToByte) shouldBe OptionalByte.empty
+      Optional.empty[String].map(mapToShort) shouldBe OptionalShort.empty
+      Optional.empty[String].map(mapToInt) shouldBe OptionalInt.empty
+      Optional.empty[String].map(mapToLong) shouldBe OptionalLong.empty
+      Optional.empty[String].map(mapToFloat).isEmpty shouldBe true
+      Optional.empty[String].map(mapToDouble).isEmpty shouldBe true
+      Optional.empty[String].map(mapToString) shouldBe Optional.empty[String]
+    }
   }
 
   property("Non empty values unapply to themselves") {
@@ -34,10 +35,16 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
   }
 
   property("Non empty values map using the passed in function") {
-    forAll { (value: Int, modifier: String) =>
-      whenever(modifier != null) {
-        Optional(value.toString).map(_ + modifier).get shouldBe (value.toString + modifier)
-      }
+    forAll(strings, mapFunctionsFrom[String]) { (value, functions) =>
+      import functions._
+
+      Optional(value).map(mapToByte) shouldBe OptionalByte(mapToByte(value))
+      Optional(value).map(mapToShort) shouldBe OptionalShort(mapToShort(value))
+      Optional(value).map(mapToInt) shouldBe OptionalInt(mapToInt(value))
+      Optional(value).map(mapToLong) shouldBe OptionalLong(mapToLong(value))
+      Optional(value).map(mapToFloat) shouldBe OptionalFloat(mapToFloat(value))
+      Optional(value).map(mapToDouble) shouldBe OptionalDouble(mapToDouble(value))
+      Optional(value).map(mapToString) shouldBe Optional(mapToString(value))
     }
   }
 
@@ -82,15 +89,43 @@ class OptionalSpec extends PropSpec with Matchers with GeneratorDrivenPropertyCh
     }
   }
 
-  property("getOrElse on the empty value returns the passed in alternative") {
+  property("orElse on the empty value returns the passed in alternative") {
     Optional.empty[String].orElse("foo") shouldBe "foo"
   }
 
-  property("getOrElse on non empty values does not evaluate the passed in function") {
+  property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: String =>
       whenever(x != null) {
         Optional(x).orElse(throw new IllegalArgumentException) shouldBe x
       }
+    }
+  }
+
+  property("The empty value flatMaps to the empty value of its target type") {
+    forAll(flatMapFunctionsFrom[String]) { functions =>
+      import functions._
+
+      Optional.empty[String].flatMap(mapToOptionalByte) shouldBe OptionalByte.empty
+      Optional.empty[String].flatMap(mapToOptionalShort) shouldBe OptionalShort.empty
+      Optional.empty[String].flatMap(mapToOptionalInt) shouldBe OptionalInt.empty
+      Optional.empty[String].flatMap(mapToOptionalLong) shouldBe OptionalLong.empty
+      Optional.empty[String].flatMap(mapToOptionalFloat).isEmpty shouldBe true
+      Optional.empty[String].flatMap(mapToOptionalDouble).isEmpty shouldBe true
+      Optional.empty[String].flatMap(mapToOptionalString) shouldBe Optional.empty[String]
+    }
+  }
+
+  property("Non empty values flatMap using the passed in function") {
+    forAll(strings, flatMapFunctionsFrom[String]) { (value, functions) =>
+      import functions._
+
+      Optional(value).flatMap(mapToOptionalByte) shouldBe mapToOptionalByte(value)
+      Optional(value).flatMap(mapToOptionalShort) shouldBe mapToOptionalShort(value)
+      Optional(value).flatMap(mapToOptionalInt) shouldBe mapToOptionalInt(value)
+      Optional(value).flatMap(mapToOptionalLong) shouldBe mapToOptionalLong(value)
+      Optional(value).flatMap(mapToOptionalFloat) shouldBe mapToOptionalFloat(value)
+      Optional(value).flatMap(mapToOptionalDouble) shouldBe mapToOptionalDouble(value)
+      Optional(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
     }
   }
 }

@@ -16,8 +16,9 @@ final class OptionalLong(val value: Long) extends AnyVal {
   def isMaxValue = value == 0x7fffffffffffffffL
 
   def map[T](f: Long => T)(implicit x: OptionalResolver[T]): x.OptionalType = macro OptionalMacros.map_impl[Long, T]
+  def flatMap[T](f: Long => T)(implicit x: PrimitiveResolver[T]): T = macro OptionalMacros.flatMap_impl[Long, T]
   def foreach(f: Long => Unit): Unit = macro OptionalMacros.foreach_impl[Long]
   def exists(f: Long => Boolean): Boolean = macro OptionalMacros.exists_impl[Long]
   def filter(f: Long => Boolean): OptionalLong = macro OptionalMacros.filter_impl[Long]
-  def orElse(f: => Long): Long = macro OptionalMacros.getOrElse_impl[Long]
+  def orElse(f: => Long): Long = macro OptionalMacros.orElse_impl[Long]
 }
