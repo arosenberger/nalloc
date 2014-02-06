@@ -53,7 +53,7 @@ The following functions are currently available in the master branch:
 ```
     val y = OptionalInt(x).flatMap(x => OptionalLong(x + 1L))
 
-    val y = Optional(x).map(x => Optional(List(x)))
+    val y = Optional(x).flatMap(x => Optional(List(x)))
 ```
 
 - `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
