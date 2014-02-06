@@ -35,66 +35,50 @@ Pattern matching is similar to that of Scala's `Option` type
 
 ####Higher Order Functions
 
-The following functions are currently available in the master branch:
+The following functions are currently available in the master branch. They all offer the same guarantees:
+- Primitives will not box to their object counterparts
+- None of the OptionalX instances will allocate, subject to the limitations described in http://docs.scala-lang.org/overviews/core/value-classes.html
+- No anonymous functions / closures will be created for the lambas or method values passed into the higher order functions
 
-- `map[B](f: A => B): B` If `A`'s value is the sentinel for that type, the map function is not applied and instead the sentinel value for type `B` is returned
+- `map[B](f: A => B): OptionalTypeForB` If `A`'s value is the sentinel for that type, the function is not applied and instead the empty OptionalTypeB is returned
 ```
-    // no allocation of OptionalInt
-    // no boxing of x
-    // no anonymous function created
     val y = OptionalInt(x).map(_ + 1)
 
-    // no allocation of Optional
-    // no anonymous function created
-    // x will still be wrapped in an array due to the varargs signature of List.apply
     val y = Optional(x).map(List(_))
+```
+
+- `flatMap[B](f: A => OptionalTypeForB): OptionalTypeForB` If `A`'s value is the sentinel for that type, the function is not applied and instead the empty OptionalTypeB is returned
+```
+    val y = OptionalInt(x).flatMap(x => OptionalLong(x + 1L))
+
+    val y = Optional(x).map(x => Optional(List(x)))
 ```
 
 - `foreach[A](f: A => Unit)` If `A`'s value is the sentinel for that type, the foreach block is not executed.
 ```
-    // no allocation of Optional
-    // no anonymous function created
     Optional(x).foreach(println)
 
-    // no allocation of OptionalInt
-    // no anonymous function created
-    // x will still box to Integer so it can be passed to println
     OptionalInt(x).foreach(println)
 ```
 
 - `exists[A](f: A => Boolean): Boolean` If `A`'s value is the sentinel for that type, returns false. Otherwise evaluates the passed in function.
 ```
-    // no allocation of Optional
-    // no anonymous function created
     Optional(x).exists(_ == "foo")
 
-    // no allocation of OptionalInt
-    // no boxing of x
-    // no anonymous function created
     OptionalInt(x).exists(_ % 2 == 0)
 ```
 
 - `filter[A](f: A => Boolean): OptionalType` If `A`'s value is the sentinel for that type or the passed in function evaluates false, returns the empty optional type. Otherwise returns the original optional type.
 ```
-    // no allocation of Optional
-    // no anonymous function created
     Optional(x).filter(_ == "foo")
 
-    // no allocation of OptionalInt
-    // no boxing of x
-    // no anonymous function created
     OptionalInt(x).filter(_ % 2 == 0)
 ```
 
-- `orElse[A](f: => A): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise returns the value.
+- `orElse[A](f: => A): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise returns the value held in the Optional wrapper.
 ```
-    // no allocation of Optional
-    // no anonymous function created
     Optional(x).orElse("foo")
 
-    // no allocation of OptionalInt
-    // no boxing of x
-    // no anonymous function created
     OptionalInt(x).orElse(15)
 ```
 
