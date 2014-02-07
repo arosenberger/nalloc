@@ -21,4 +21,5 @@ final class OptionalLong(val value: Long) extends AnyVal {
   def exists(f: Long => Boolean): Boolean = macro OptionalMacros.exists_impl[Long]
   def filter(f: Long => Boolean): OptionalLong = macro OptionalMacros.filter_impl[Long]
   def orElse(f: => Long): Long = macro OptionalMacros.orElse_impl[Long]
+  def fold[T](ifEmpty: => T)(f: Long => T): T = macro OptionalMacros.fold_impl[Long, T]
 }

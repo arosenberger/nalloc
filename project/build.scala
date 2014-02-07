@@ -60,8 +60,9 @@ object Shared {
       "-feature",
       "-optimise",
       "-language:experimental.macros",
-      "-Yinline-warnings"
-//      ,"-Ymacro-debug-lite"
+      "-Yinline-warnings",
+      "-unchecked"
+      //      ,"-Ymacro-debug-lite"
     ),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),

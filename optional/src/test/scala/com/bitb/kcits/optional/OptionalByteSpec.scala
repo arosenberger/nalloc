@@ -134,4 +134,22 @@ class OptionalByteSpec extends OptionalTypeSuite {
       }
     }
   }
+
+  property("The empty value always applies the ifEmpty portion of a fold") {
+    forAll { (ifEmpty: Byte, ifNotEmpty: Byte) =>
+      whenever(ifEmpty != ifNotEmpty) {
+        OptionalByte.empty.fold(ifEmpty)(_ => ifNotEmpty) shouldBe ifEmpty
+      }
+    }
+  }
+
+  property("Non empty values always apply the map portion of a fold") {
+    forAll(bytes, bytes, mapFunctionsFrom[Byte]) { (ifEmpty, value, functions) =>
+      whenever(value != Byte.MinValue) {
+        import functions._
+
+        OptionalByte(value).fold(ifEmpty)(mapToByte) shouldBe mapToByte(value)
+      }
+    }
+  }
 }

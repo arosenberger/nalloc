@@ -21,4 +21,5 @@ final class OptionalByte(val value: Byte) extends AnyVal {
   def exists(f: Byte => Boolean): Boolean = macro OptionalMacros.exists_impl[Byte]
   def filter(f: Byte => Boolean): OptionalByte = macro OptionalMacros.filter_impl[Byte]
   def orElse(f: => Byte): Byte = macro OptionalMacros.orElse_impl[Byte]
+  def fold[T](ifEmpty: => T)(f: Byte => T): T = macro OptionalMacros.fold_impl[Byte, T]
 }

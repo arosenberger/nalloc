@@ -128,4 +128,22 @@ class OptionalSpec extends OptionalTypeSuite {
       Optional(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
     }
   }
+
+  property("The empty value always applies the ifEmpty portion of a fold") {
+    forAll { (ifEmpty: String, ifNotEmpty: String) =>
+      whenever(ifEmpty != ifNotEmpty) {
+        Optional.empty[String].fold(ifEmpty)(_ => ifNotEmpty) shouldBe ifEmpty
+      }
+    }
+  }
+
+  property("Non empty values always apply the map portion of a fold") {
+    forAll(strings, strings, mapFunctionsFrom[String]) { (ifEmpty, value, functions) =>
+      whenever(value != null) {
+        import functions._
+
+        Optional(value).fold(ifEmpty)(mapToString) shouldBe mapToString(value)
+      }
+    }
+  }
 }

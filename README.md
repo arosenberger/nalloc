@@ -35,7 +35,7 @@ Pattern matching is similar to that of Scala's `Option` type
 
 ####Higher Order Functions
 
-Each higher order function offers the same functionality:
+Each higher order function offers the same characteristics:
 - Primitives will not box to their object counterparts
 - None of the OptionalX instances will allocate, subject to the limitations described in http://docs.scala-lang.org/overviews/core/value-classes.html
 - No anonymous functions / closures will be created for the lambdas or method values passed into the higher order functions
@@ -82,6 +82,13 @@ The following functions are currently available in the master branch:
     Optional(x).orElse("foo")
 
     OptionalInt(x).orElse(15)
+```
+
+- `fold[B](ifEmpty: => B)(f: A => B): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise applies `f` to the underlying value.
+```
+    Optional(x).fold("foo")(_ + "bar)
+
+    OptionalInt(x).fold(15)(x => x + 1)
 ```
 
 Requirements

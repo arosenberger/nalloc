@@ -106,6 +106,20 @@ object OptionalMacros {
     """)
   }
 
+  def fold_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(ifEmpty: c.Expr[B])(f: c.Expr[A => B]) = {
+    import c.universe._
+
+    val underlying = underlyingValue[A](c)
+    val sentinelGuard = generateSentinelGuard[A](c)(underlying)
+
+    new Inliner[c.type](c).inlineAndReset( q"""
+    if ($sentinelGuard)
+      $f($underlying)
+    else
+      $ifEmpty
+    """)
+  }
+
   private def underlyingValue[A: c.WeakTypeTag](c: BlackboxContext) = {
     import c.universe._
 

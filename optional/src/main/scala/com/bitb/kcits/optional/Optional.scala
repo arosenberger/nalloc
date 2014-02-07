@@ -20,4 +20,5 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
   def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
   def orElse(f: => A): A = macro OptionalMacros.orElse_impl[A]
+  def fold[B](ifEmpty: => B)(f: A => B): B = macro OptionalMacros.fold_impl[A, B]
 }

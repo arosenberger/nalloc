@@ -118,4 +118,20 @@ class OptionalFloatSpec extends OptionalTypeSuite {
       OptionalFloat(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
     }
   }
+
+  property("The empty value always applies the ifEmpty portion of a fold") {
+    forAll { (ifEmpty: Float, ifNotEmpty: Float) =>
+      whenever(ifEmpty != ifNotEmpty) {
+        OptionalFloat.empty.fold(ifEmpty)(_ => ifNotEmpty) shouldBe ifEmpty
+      }
+    }
+  }
+
+  property("Non empty values always apply the map portion of a fold") {
+    forAll(floats, floats, mapFunctionsFrom[Float]) { (ifEmpty, value, functions) =>
+      import functions._
+
+      OptionalFloat(value).fold(ifEmpty)(mapToFloat) shouldBe mapToFloat(value)
+    }
+  }
 }

@@ -36,24 +36,6 @@ trait OptionalTypeSuite extends PropSpec with Matchers with GeneratorDrivenPrope
       st <- arbFunction1[T, Optional[String]].arbitrary
     } yield FlatMapFunctions(b, s, i, l, f, d, st)
 
-  final case class MapFunctions[T](
-    mapToByte: T => Byte,
-    mapToShort: T => Short,
-    mapToInt: T => Int,
-    mapToLong: T => Long,
-    mapToFloat: T => Float,
-    mapToDouble: T => Double,
-    mapToString: T => String)
-
-  final case class FlatMapFunctions[T](
-    mapToOptionalByte: T => OptionalByte,
-    mapToOptionalShort: T => OptionalShort,
-    mapToOptionalInt: T => OptionalInt,
-    mapToOptionalLong: T => OptionalLong,
-    mapToOptionalFloat: T => OptionalFloat,
-    mapToOptionalDouble: T => OptionalDouble,
-    mapToOptionalString: T => Optional[String])
-
   implicit def genOptionalByte: Arbitrary[OptionalByte] = Arbitrary(arbByte.arbitrary.map(x => OptionalByte(x)))
   implicit def genOptionalShort: Arbitrary[OptionalShort] = Arbitrary(arbShort.arbitrary.map(x => OptionalShort(x)))
   implicit def genOptionalInt: Arbitrary[OptionalInt] = Arbitrary(arbInt.arbitrary.map(x => OptionalInt(x)))
@@ -62,3 +44,21 @@ trait OptionalTypeSuite extends PropSpec with Matchers with GeneratorDrivenPrope
   implicit def genOptionalDouble: Arbitrary[OptionalDouble] = Arbitrary(arbDouble.arbitrary.map(x => OptionalDouble(x)))
   implicit def genOptional: Arbitrary[Optional[String]] = Arbitrary(arbString.arbitrary.map(x => Optional(x)))
 }
+
+final case class MapFunctions[T](
+  mapToByte: T => Byte,
+  mapToShort: T => Short,
+  mapToInt: T => Int,
+  mapToLong: T => Long,
+  mapToFloat: T => Float,
+  mapToDouble: T => Double,
+  mapToString: T => String)
+
+final case class FlatMapFunctions[T](
+  mapToOptionalByte: T => OptionalByte,
+  mapToOptionalShort: T => OptionalShort,
+  mapToOptionalInt: T => OptionalInt,
+  mapToOptionalLong: T => OptionalLong,
+  mapToOptionalFloat: T => OptionalFloat,
+  mapToOptionalDouble: T => OptionalDouble,
+  mapToOptionalString: T => Optional[String])

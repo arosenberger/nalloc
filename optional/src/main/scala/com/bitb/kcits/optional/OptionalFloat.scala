@@ -22,4 +22,5 @@ final class OptionalFloat(val value: Float) extends AnyVal {
   def exists(f: Float => Boolean): Boolean = macro OptionalMacros.exists_impl[Float]
   def filter(f: Float => Boolean): OptionalFloat = macro OptionalMacros.filter_impl[Float]
   def orElse(f: => Float): Float = macro OptionalMacros.orElse_impl[Float]
+  def fold[T](ifEmpty: => T)(f: Float => T): T = macro OptionalMacros.fold_impl[Float, T]
 }

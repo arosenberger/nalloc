@@ -119,4 +119,20 @@ class OptionalDoubleSpec extends OptionalTypeSuite {
       OptionalDouble(value).flatMap(mapToOptionalString) shouldBe mapToOptionalString(value)
     }
   }
+
+  property("The empty value always applies the ifEmpty portion of a fold") {
+    forAll { (ifEmpty: Double, ifNotEmpty: Double) =>
+      whenever(ifEmpty != ifNotEmpty) {
+        OptionalDouble.empty.fold(ifEmpty)(_ => ifNotEmpty) shouldBe ifEmpty
+      }
+    }
+  }
+
+  property("Non empty values always apply the map portion of a fold") {
+    forAll(doubles, doubles, mapFunctionsFrom[Double]) { (ifEmpty, value, functions) =>
+      import functions._
+
+      OptionalDouble(value).fold(ifEmpty)(mapToDouble) shouldBe mapToDouble(value)
+    }
+  }
 }

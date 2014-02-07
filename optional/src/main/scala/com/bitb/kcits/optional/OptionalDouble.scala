@@ -22,4 +22,5 @@ final class OptionalDouble(val value: Double) extends AnyVal {
   def exists(f: Double => Boolean): Boolean = macro OptionalMacros.exists_impl[Double]
   def filter(f: Double => Boolean): OptionalDouble = macro OptionalMacros.filter_impl[Double]
   def orElse(f: => Double): Double = macro OptionalMacros.orElse_impl[Double]
+  def fold[T](ifEmpty: => T)(f: Double => T): T = macro OptionalMacros.fold_impl[Double, T]
 }

@@ -129,4 +129,22 @@ class OptionalLongSpec extends OptionalTypeSuite {
       }
     }
   }
+
+  property("The empty value always applies the ifEmpty portion of a fold") {
+    forAll { (ifEmpty: Long, ifNotEmpty: Long) =>
+      whenever(ifEmpty != ifNotEmpty) {
+        OptionalLong.empty.fold(ifEmpty)(_ => ifNotEmpty) shouldBe ifEmpty
+      }
+    }
+  }
+
+  property("Non empty values always apply the map portion of a fold") {
+    forAll(longs, longs, mapFunctionsFrom[Long]) { (ifEmpty, value, functions) =>
+      whenever(value != Long.MinValue) {
+        import functions._
+
+        OptionalLong(value).fold(ifEmpty)(mapToLong) shouldBe mapToLong(value)
+      }
+    }
+  }
 }

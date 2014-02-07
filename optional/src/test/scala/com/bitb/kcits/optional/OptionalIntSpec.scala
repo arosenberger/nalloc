@@ -132,4 +132,22 @@ class OptionalIntSpec extends OptionalTypeSuite {
       }
     }
   }
+
+  property("The empty value always applies the ifEmpty portion of a fold") {
+    forAll { (ifEmpty: Int, ifNotEmpty: Int) =>
+      whenever(ifEmpty != ifNotEmpty) {
+        OptionalInt.empty.fold(ifEmpty)(_ => ifNotEmpty) shouldBe ifEmpty
+      }
+    }
+  }
+
+  property("Non empty values always apply the map portion of a fold") {
+    forAll(ints, ints, mapFunctionsFrom[Int]) { (ifEmpty, value, functions) =>
+      whenever(value != Int.MinValue) {
+        import functions._
+
+        OptionalInt(value).fold(ifEmpty)(mapToInt) shouldBe mapToInt(value)
+      }
+    }
+  }
 }
