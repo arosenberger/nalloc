@@ -18,7 +18,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalByte extends OptionalResolverImplicits {
+object OptionalByte {
   final def empty: OptionalByte = new OptionalByte(-128)
   final def apply(value: Byte): OptionalByte = new OptionalByte(value)
   final def unapply(value: Byte): OptionalByte = new OptionalByte(value)

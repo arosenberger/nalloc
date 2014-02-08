@@ -18,7 +18,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalInt extends OptionalResolverImplicits {
+object OptionalInt {
   final def empty: OptionalInt = new OptionalInt(-2147483648)
   final def apply(value: Int): OptionalInt = new OptionalInt(value)
   final def unapply(value: Int): OptionalInt = new OptionalInt(value)

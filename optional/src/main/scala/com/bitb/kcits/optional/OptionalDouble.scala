@@ -18,7 +18,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalDouble extends OptionalResolverImplicits {
+object OptionalDouble {
   final def empty: OptionalDouble = new OptionalDouble(java.lang.Double.NaN)
   final def apply(value: Double): OptionalDouble = new OptionalDouble(value)
   final def unapply(value: Double): OptionalDouble = new OptionalDouble(value)

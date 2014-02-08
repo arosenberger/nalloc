@@ -16,11 +16,12 @@
 
 package com.bitb.kcits.sandbox.memoryusage
 
-import com.bitb.kcits.optional.OptionalLong
+import com.bitb.kcits.optional._
 import java.util.Random
 import scala.annotation.switch
 
 object UnapplyMemoryUsage extends MemoryUsageApp {
+
   protected def passes = 25
   private[this] val passes_ = passes
   private[this] val iterations = 1e7.toInt
@@ -33,6 +34,8 @@ object UnapplyMemoryUsage extends MemoryUsageApp {
 
   forceGc()
   touchCode()
+  forceGc()
+  Thread.sleep(1000)
   forceGc()
   private[this] var i = 0
   while (i < passes_) {
@@ -59,7 +62,7 @@ object UnapplyMemoryUsage extends MemoryUsageApp {
       case _               =>
     }
 
-    println(OptionalLong(1).map(_ + 1))
+    println(OptionalLong(1).map(_ + 1).value)
 
     if (seedValuesSum == 0) sys.error("")
     if (customOptionValues(0) != 0) sys.error("")

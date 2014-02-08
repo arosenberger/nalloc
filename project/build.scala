@@ -14,16 +14,28 @@ object Build extends sbt.Build {
     project(
       id = "optional",
       base = file("optional")
-    ).dependsOn(macros)
-    .settings(Defaults.itSettings: _*)
+    ).settings(Defaults.itSettings: _*)
     .settings(compile <<= compile in Compile dependsOn(compile in Test, compile in IntegrationTest))
     .settings(parallelExecution in IntegrationTest := false)
+    .settings(mappings in(Compile, packageBin) ++= mappings.in(macros, Compile, packageBin).value)
+    .settings(mappings in(Compile, packageSrc) ++= mappings.in(macros, Compile, packageSrc).value)
+    .dependsOn(macros)
 
   lazy val sandbox =
     project(
       id = "sandbox",
       base = file("sandbox")
     ).dependsOn(optional)
+    .settings(publish := {})
+    .settings(publishLocal := {})
+    .settings(fork in run := true)
+    .settings(outputStrategy := Some(StdoutOutput))
+    .settings(javaOptions in run ++= Seq(
+      "-ms4g",
+      "-mx4g",
+      "-XX:+AlwaysPreTouch",
+      "-XX:+TieredCompilation"
+    ))
 
   lazy val macros =
     project(
@@ -61,7 +73,8 @@ object Shared {
       "-optimise",
       "-language:experimental.macros",
       "-Yinline-warnings",
-      "-unchecked"
+      "-unchecked",
+      "-feature"
       //      ,"-Ymacro-debug-lite"
     ),
     resolvers += Resolver.sonatypeRepo("snapshots"),

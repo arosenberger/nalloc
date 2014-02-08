@@ -16,9 +16,11 @@
 
 package com.bitb.kcits.sandbox.map
 
+import com.bitb.kcits.optional._
 import com.bitb.kcits.sandbox.Inspectable
 
 class SimpleInlineLambda extends Inspectable {
+
   private[this] val bInline = b.map(_ + 1)
   private[this] val sInline = s.map(_ + 2)
   private[this] val iInline = i.map(_ + 3)

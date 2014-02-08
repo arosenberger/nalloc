@@ -16,6 +16,7 @@
 
 package com.bitb.kcits.sandbox.map
 
+import com.bitb.kcits.optional._
 import com.bitb.kcits.sandbox.Inspectable
 
 class MethodValue extends Inspectable {

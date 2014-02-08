@@ -18,7 +18,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object OptionalFloat extends OptionalResolverImplicits {
+object OptionalFloat {
   final def empty: OptionalFloat = new OptionalFloat(java.lang.Float.NaN)
   final def apply(value: Float): OptionalFloat = new OptionalFloat(value)
   final def unapply(value: Float): OptionalFloat = new OptionalFloat(value)

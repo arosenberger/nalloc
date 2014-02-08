@@ -18,7 +18,7 @@ package com.bitb.kcits.optional
 
 import com.bitb.kcits.macros._
 
-object Optional extends OptionalResolverImplicits {
+object Optional {
   final private[this] val None = new Optional[Null](null)
 
   def empty[A >: Null]: Optional[A] = None

@@ -33,6 +33,8 @@ object ForeachMemoryUsage extends MemoryUsageApp {
   forceGc()
   touchCode()
   forceGc()
+  Thread.sleep(1000)
+  forceGc()
   private[this] var i = 0
   while (i < passes_) {
     forceGc()
