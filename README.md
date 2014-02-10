@@ -95,3 +95,13 @@ Requirements
 ------
 
 The project is built against Scala 2.11.0-M7 and requires 2.11.0-M5 or greater
+
+SBT Dependency
+------
+
+libraryDependencies += "org.nalloc" %% "optional" % "0.1.0-SNAPSHOT"
+
+Getting Started
+------
+
+import org.nalloc.bitb.kcits.optional._
