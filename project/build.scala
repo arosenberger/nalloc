@@ -65,7 +65,7 @@ object Shared {
   )
 
   val settings = Seq(
-    organization := "com.bitb.kcits",
+    organization := "org.nalloc",
     scalaVersion := "2.11.0-M7",
     scalacOptions := Seq(
       "-deprecation",
