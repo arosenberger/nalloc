@@ -1,0 +1,10 @@
+ language: scala
+ scala:
+   - "2.11.0-M7"
+notifications:
+  email:
+    recipients:
+      - adam.rosenberger1@gmail.com
+ jdk:
+   - oraclejdk7
+   - openjdk7
