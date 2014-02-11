@@ -105,3 +105,8 @@ Getting Started
 ------
 
 import org.nalloc.bitb.kcits.optional._
+
+Remarks
+------
+
+Comments, feedback, bugs and feature suggestions are all welcome. I am considering adding additional classes with unsigned semantics and some collection support to get around the issue with using value classes in e.g. Arrays causing them to be allocated.
