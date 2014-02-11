@@ -38,4 +38,6 @@ final class OptionalShort(val value: Short) extends AnyVal {
   def filter(f: Short => Boolean): OptionalShort = macro OptionalMacros.filter_impl[Short]
   def orElse(f: => Short): Short = macro OptionalMacros.orElse_impl[Short]
   def fold[T](ifEmpty: => T)(f: Short => T): T = macro OptionalMacros.fold_impl[Short, T]
+
+  override def toString = if (isEmpty) "-32768 (empty)" else s"$value"
 }

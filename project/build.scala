@@ -51,10 +51,41 @@ object Build extends sbt.Build {
         Project.defaultSettings ++
         Shared.settings ++
         releaseSettings ++
-        Seq(
-          libraryDependencies ++= Shared.testDeps
-        )
+        Seq(libraryDependencies ++= Shared.testDeps)
     ).configs(IntegrationTest)
+    .settings(
+      publishTo <<= version { version: String =>
+        val nexus = "https://oss.sonatype.org/"
+        if (version.trim.endsWith("SNAPSHOT"))
+          Some("snapshots" at nexus + "content/repositories/snapshots")
+        else
+          Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      })
+    .settings(publishArtifact in Test := false)
+    .settings(credentials += Credentials(Path.userHome / ".ivy2" / ".nalloc_credentials"))
+    .settings(pomIncludeRepository := { _ => false})
+    .settings(pomExtra :=
+              <url>http://nalloc.org</url>
+                <scm>
+                  <url>git@github.com:arosenberger/nalloc.git</url>
+                  <connection>scm:git:git@github.com:arosenberger/nalloc.git</connection>
+                </scm>
+                <licenses>
+                  <license>
+                    <name>The Apache Software License, Version 2.0</name>
+                    <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+                    <distribution>repo</distribution>
+                    <comments>A business-friendly OSS license</comments>
+                  </license>
+                </licenses>
+                <developers>
+                  <developer>
+                    <id>arosenberger</id>
+                    <name>Adam Rosenberger</name>
+                    <url>http://github.com/arosenberger/</url>
+                  </developer>
+                </developers>
+    )
 }
 
 object Shared {
