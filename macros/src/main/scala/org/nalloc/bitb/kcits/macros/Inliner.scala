@@ -29,7 +29,7 @@ class Inliner[C <: BlackboxContext with Singleton](val c: C) {
 
   def inlineAndReset[T](tree: Tree): c.Expr[T] = {
     val inlined = inlineApplyRecursive(tree)
-    c.Expr[T](c.resetAllAttrs(inlined))
+    c.Expr[T](c.resetLocalAttrs(inlined))
   }
 
   def inlineApplyRecursive(tree: Tree): Tree = {
@@ -38,7 +38,7 @@ class Inliner[C <: BlackboxContext with Singleton](val c: C) {
     class InlineSymbol(symbol: Symbol, value: Tree) extends Transformer {
       override def transform(tree: Tree): Tree = tree match {
         case Ident(_) if tree.symbol == symbol   => value
-        case tt: TypeTree if tt.original != null => super.transform(TypeTree().setOriginal(transform(tt.original)))
+        case tt: TypeTree if tt.original != null => super.transform(tt.original)
         case _                                   => super.transform(tree)
       }
     }

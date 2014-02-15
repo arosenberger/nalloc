@@ -33,6 +33,20 @@ Pattern matching is similar to that of Scala's `Option` type
     }
 ```
 
+####Factory Methods
+
+Each primitive type has a direct constructor, e.g. `OptionalInt(5)`. For convenience, there are overloaded factory methods in the `Optional` companion object to allow for construction of the appropriate type. For example
+```
+scala> import org.nalloc.bitb.kcits.optional._
+import org.nalloc.bitb.kcits.optional._
+
+scala> val b = Optional(5.toByte)
+b: org.nalloc.bitb.kcits.optional.OptionalByte = 5
+
+scala> val l = Optional(5L)
+l: org.nalloc.bitb.kcits.optional.OptionalLong = 5
+```
+
 ####Higher Order Functions
 
 Each higher order function offers the same characteristics:
