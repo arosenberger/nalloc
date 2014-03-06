@@ -16,20 +16,20 @@
 
 package org.nalloc.bitb.kcits.macros
 
-import scala.reflect.macros._
+import scala.reflect.macros.blackbox._
 
 object Inliner {
   final val debug = Option(System.getProperty("inlinerDebug")).exists(_.toBoolean)
 }
 
-class Inliner[C <: BlackboxContext with Singleton](val c: C) {
+class Inliner[C <: Context with Singleton](val c: C) {
 
   import Inliner._
   import c.universe._
 
   def inlineAndReset[T](tree: Tree): c.Expr[T] = {
     val inlined = inlineApplyRecursive(tree)
-    c.Expr[T](c.resetLocalAttrs(inlined))
+    c.Expr[T](c.untypecheck(inlined))
   }
 
   def inlineApplyRecursive(tree: Tree): Tree = {

@@ -17,7 +17,7 @@
 package org.nalloc.bitb.kcits.macros
 
 import scala.language.existentials
-import scala.reflect.macros._
+import scala.reflect.macros.blackbox._
 
 private[kcits] trait OptionalResolver[T] {
   type OptionalType
@@ -29,7 +29,7 @@ private[kcits] trait PrimitiveResolver[T] {
 
 object OptionalMacros {
 
-  def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B])(x: c.Expr[OptionalResolver[B]]): c.Expr[x.value.OptionalType] = {
+  def map_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(f: c.Expr[A => B])(x: c.Expr[OptionalResolver[B]]): c.Expr[x.value.OptionalType] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -49,7 +49,7 @@ object OptionalMacros {
     """)
   }
 
-  def flatMap_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => B])(x: c.Expr[PrimitiveResolver[B]]): c.Expr[B] = {
+  def flatMap_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(f: c.Expr[A => B])(x: c.Expr[PrimitiveResolver[B]]): c.Expr[B] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -71,7 +71,7 @@ object OptionalMacros {
     """)
   }
 
-  def foreach_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => Unit]): c.Expr[Unit] = {
+  def foreach_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A => Unit]): c.Expr[Unit] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -83,7 +83,7 @@ object OptionalMacros {
     """)
   }
 
-  def exists_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => Boolean]): c.Expr[Boolean] = {
+  def exists_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A => Boolean]): c.Expr[Boolean] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -92,7 +92,7 @@ object OptionalMacros {
     new Inliner[c.type](c).inlineAndReset(q"$sentinelGuard && $f($underlying)")
   }
 
-  def filter_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A => Boolean]) = {
+  def filter_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A => Boolean]) = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -108,7 +108,7 @@ object OptionalMacros {
     """)
   }
 
-  def orElse_impl[A: c.WeakTypeTag](c: BlackboxContext)(f: c.Expr[A]) = {
+  def orElse_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A]) = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -122,7 +122,7 @@ object OptionalMacros {
     """)
   }
 
-  def fold_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: BlackboxContext)(ifEmpty: c.Expr[B])(f: c.Expr[A => B]) = {
+  def fold_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(ifEmpty: c.Expr[B])(f: c.Expr[A => B]) = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -136,13 +136,13 @@ object OptionalMacros {
     """)
   }
 
-  private def underlyingValue[A: c.WeakTypeTag](c: BlackboxContext) = {
+  private def underlyingValue[A: c.WeakTypeTag](c: Context) = {
     import c.universe._
 
     c.Expr[A](Select(c.prefix.tree, TermName("value")))
   }
 
-  private def generateSentinelGuard[A: c.WeakTypeTag](c: BlackboxContext)(underlying: c.Expr[A]) = {
+  private def generateSentinelGuard[A: c.WeakTypeTag](c: Context)(underlying: c.Expr[A]) = {
     import c.universe._
 
     val sentinel = sentinelValue[A](c)
@@ -151,15 +151,15 @@ object OptionalMacros {
     else q"$sentinel != $underlying"
   }
 
-  private def isFloatingPointType[A: c.WeakTypeTag](c: BlackboxContext) = c.weakTypeTag[A].tpe match {
+  private def isFloatingPointType[A: c.WeakTypeTag](c: Context) = c.weakTypeTag[A].tpe match {
     case x if x =:= c.WeakTypeTag.Float.tpe || x =:= c.WeakTypeTag.Double.tpe => true
     case _                                                                    => false
   }
 
-  private def sentinelValue[X: c.WeakTypeTag](c: BlackboxContext): c.universe.Tree =
+  private def sentinelValue[X: c.WeakTypeTag](c: Context): c.universe.Tree =
     sentinelValueFor(c)(c.weakTypeTag[X].tpe)
 
-  private def sentinelValueFor(c: BlackboxContext)(underlyingType: c.universe.Type): c.universe.Tree = {
+  private def sentinelValueFor(c: Context)(underlyingType: c.universe.Type): c.universe.Tree = {
     import c.universe._
 
     underlyingType match {
