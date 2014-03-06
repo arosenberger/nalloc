@@ -5,7 +5,7 @@ The goal of this project is to provide the following constructs:
 - Allocation free option types for both primitives and reference types
 - Higher order functions that are inlined by a macro expansion during compilation
 
-Its functionality is based on the excellent work Paul Phillips contributed to 2.11.0-M5 to make extractors name based.
+Its functionality is based in part on the excellent work Paul Phillips contributed to 2.11.0-M5 to make extractors name based.
 Optional Primitives
 ------
 
@@ -108,7 +108,7 @@ The following functions are currently available in the master branch:
 Requirements
 ------
 
-The project is built against Scala 2.11.0-M7 and requires 2.11.0-M5 or greater
+The project is built against Scala 2.11.0-RC1 and uses Name Based Extractos which appeared in 2.11.0-M5.
 
 SBT Dependency
 ------
