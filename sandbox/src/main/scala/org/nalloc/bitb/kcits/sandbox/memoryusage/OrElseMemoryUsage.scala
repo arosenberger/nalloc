@@ -61,7 +61,7 @@ object OrElseMemoryUsage extends MemoryUsageApp {
       case _               =>
     }
 
-    if (OptionalLong(10).orElse(15) != 10) sys.error("")
+    if (OptionalLong(10).getOrElse(15) != 10) sys.error("")
     if (customOptionValues(0) != 0) sys.error("")
     initMemory()
   }
@@ -77,7 +77,7 @@ object OrElseMemoryUsage extends MemoryUsageApp {
         case 1 => seedValuesReverse(i)
       }
 
-      sum += OptionalLong(optional).orElse(i)
+      sum += OptionalLong(optional).getOrElse(i)
 
       i += 1
     }

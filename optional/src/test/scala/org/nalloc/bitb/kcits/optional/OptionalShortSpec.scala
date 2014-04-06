@@ -108,13 +108,13 @@ class OptionalShortSpec extends OptionalTypeSuite {
   }
 
   property("orElse on the empty value returns the passed in alternative") {
-    OptionalShort.empty.orElse(1.toShort) shouldBe 1
+    OptionalShort.empty.getOrElse(1.toShort) shouldBe 1
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Short =>
       whenever(x != Short.MinValue) {
-        OptionalShort(x).orElse(throw new IllegalArgumentException) shouldBe x
+        OptionalShort(x).getOrElse(throw new IllegalArgumentException) shouldBe x
       }
     }
   }

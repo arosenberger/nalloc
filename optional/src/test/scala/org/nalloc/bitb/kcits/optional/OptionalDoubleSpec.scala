@@ -99,12 +99,12 @@ class OptionalDoubleSpec extends OptionalTypeSuite {
   }
 
   property("orElse on the empty value returns the passed in alternative") {
-    OptionalDouble.empty.orElse(1.toByte) shouldBe 1
+    OptionalDouble.empty.getOrElse(1.toByte) shouldBe 1
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Double =>
-      OptionalDouble(x).orElse(throw new IllegalArgumentException) shouldBe x
+      OptionalDouble(x).getOrElse(throw new IllegalArgumentException) shouldBe x
     }
   }
 

@@ -20,13 +20,13 @@ import org.nalloc.bitb.kcits.sandbox.Inspectable
 
 class MethodValue extends Inspectable {
 
-  private[this] val bMethod = b.orElse(otherB)
-  private[this] val sMethod = s.orElse(otherS)
-  private[this] val iMethod = i.orElse(otherI)
-  private[this] val lMethod = l.orElse(otherL)
-  private[this] val fMethod = f.orElse(otherF)
-  private[this] val dMethod = d.orElse(otherD)
-  private[this] val stMethod = st.orElse(otherSt)
+  private[this] val bMethod = b.getOrElse(otherB)
+  private[this] val sMethod = s.getOrElse(otherS)
+  private[this] val iMethod = i.getOrElse(otherI)
+  private[this] val lMethod = l.getOrElse(otherL)
+  private[this] val fMethod = f.getOrElse(otherF)
+  private[this] val dMethod = d.getOrElse(otherD)
+  private[this] val stMethod = st.getOrElse(otherSt)
 
   private def otherB = 1.toByte
   private def otherS = 1.toShort

@@ -20,31 +20,31 @@ import org.nalloc.bitb.kcits.sandbox.Inspectable
 
 class BlockInlineLambda extends Inspectable {
 
-  private[this] val bInlineComplex = b.orElse {
+  private[this] val bInlineComplex = b.getOrElse {
     val y = 5
     (y * 3).toByte
   }
-  private[this] val sInlineComplex = s.orElse {
+  private[this] val sInlineComplex = s.getOrElse {
     val y = 5
     (y * 3).toShort
   }
-  private[this] val iInlineComplex = i.orElse {
+  private[this] val iInlineComplex = i.getOrElse {
     val y = 5
     y * 3
   }
-  private[this] val lInlineComplex = l.orElse {
+  private[this] val lInlineComplex = l.getOrElse {
     val y = 5
     y * 3
   }
-  private[this] val fInlineComplex = f.orElse {
+  private[this] val fInlineComplex = f.getOrElse {
     val y = 5
     y * 3
   }
-  private[this] val dInlineComplex = d.orElse {
+  private[this] val dInlineComplex = d.getOrElse {
     val y = 5
     y * 3
   }
-  private[this] val stInlineComplex = st.orElse {
+  private[this] val stInlineComplex = st.getOrElse {
     val y = "foo"
     y + y
   }

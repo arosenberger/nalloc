@@ -42,7 +42,7 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
   def foreach(f: A => Unit): Unit = macro OptionalMacros.foreach_impl[A]
   def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
   def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
-  def orElse(f: => A): A = macro OptionalMacros.orElse_impl[A]
+  def getOrElse(f: => A): A = macro OptionalMacros.getOrElse_impl[A]
   def fold[B](ifEmpty: => B)(f: A => B): B = macro OptionalMacros.fold_impl[A, B]
 
   override def toString = if (isEmpty) "null (empty)" else s"$value"

@@ -110,13 +110,13 @@ class OptionalByteSpec extends OptionalTypeSuite {
   }
 
   property("orElse on the empty value returns the passed in alternative") {
-    OptionalByte.empty.orElse(1.toByte) shouldBe 1
+    OptionalByte.empty.getOrElse(1.toByte) shouldBe 1
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Byte =>
       whenever(x != Byte.MinValue) {
-        OptionalByte(x).orElse(throw new IllegalArgumentException) shouldBe x
+        OptionalByte(x).getOrElse(throw new IllegalArgumentException) shouldBe x
       }
     }
   }

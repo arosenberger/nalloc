@@ -108,7 +108,7 @@ object OptionalMacros {
     """)
   }
 
-  def orElse_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A]) = {
+  def getOrElse_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A]) = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)

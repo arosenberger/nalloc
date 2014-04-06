@@ -19,11 +19,11 @@ package org.nalloc.bitb.kcits.sandbox.orelse
 import org.nalloc.bitb.kcits.sandbox.Inspectable
 
 class SimpleInlineLambda extends Inspectable {
-  private[this] val bInline = b.orElse(1)
-  private[this] val sInline = s.orElse(2)
-  private[this] val iInline = i.orElse(3)
-  private[this] val lInline = l.orElse(4)
-  private[this] val fInline = f.orElse(5)
-  private[this] val dInline = d.orElse(6)
-  private[this] val stInline = st.orElse("foo")
+  private[this] val bInline = b.getOrElse(1)
+  private[this] val sInline = s.getOrElse(2)
+  private[this] val iInline = i.getOrElse(3)
+  private[this] val lInline = l.getOrElse(4)
+  private[this] val fInline = f.getOrElse(5)
+  private[this] val dInline = d.getOrElse(6)
+  private[this] val stInline = st.getOrElse("foo")
 }

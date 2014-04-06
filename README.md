@@ -91,11 +91,11 @@ The following functions are currently available in the master branch:
     OptionalInt(x).filter(_ % 2 == 0)
 ```
 
-- `orElse[A](f: => A): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise returns the value held in the Optional wrapper.
+- `getOrElse[A](f: => A): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise returns the value held in the Optional wrapper.
 ```
-    Optional(x).orElse("foo")
+    Optional(x).getOrElse("foo")
 
-    OptionalInt(x).orElse(15)
+    OptionalInt(x).getOrElse(15)
 ```
 
 - `fold[B](ifEmpty: => B)(f: A => B): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise applies `f` to the underlying value.
