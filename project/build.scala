@@ -31,8 +31,8 @@ object Build extends sbt.Build {
     .settings(fork in run := true)
     .settings(outputStrategy := Some(StdoutOutput))
     .settings(javaOptions in run ++= Seq(
-      "-ms4g",
-      "-mx4g",
+      "-ms3g",
+      "-mx3g",
       "-XX:+AlwaysPreTouch",
       "-XX:+TieredCompilation"
     ))

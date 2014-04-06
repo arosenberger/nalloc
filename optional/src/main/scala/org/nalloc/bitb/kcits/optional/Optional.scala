@@ -46,6 +46,7 @@ final class Optional[+A >: Null](val value: A) extends AnyVal {
 	def orElse[B >: A](f: => Optional[B]): Optional[B] = macro OptionalMacros.orElse_impl[A, B]
 	def fold[B](ifEmpty: => B)(f: A => B): B = macro OptionalMacros.fold_impl[A, B]
 	def forAll(f: A => Boolean): Boolean = macro OptionalMacros.forAll_impl[A]
+	def collect[B](pf: PartialFunction[A, B])(implicit x: OptionalResolver[B]): x.OptionalType = macro OptionalMacros.collect[A, B]
 
 	override def toString = if (isEmpty) "null (empty)" else s"$value"
 }

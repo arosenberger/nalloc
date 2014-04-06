@@ -172,4 +172,45 @@ class OptionalDoubleSpec extends OptionalTypeSuite {
 			OptionalDouble(x).forAll(x => x.isNaN) shouldBe false
 		}
 	}
+
+	property("collect on the empty value always returns the empty value of its target type") {
+		OptionalDouble.empty.collect {
+			case _ => 100
+		} shouldBe OptionalInt.empty
+	}
+
+	property("collect on non empty values evaluates the passed in partial function") {
+		forAll { x: Double =>
+			whenever(x > 0) {
+				x % 2 match {
+					case 0 =>
+						val projection = OptionalDouble(x).collect {
+							case that if that % 2 == 1 => 100
+						}
+
+						projection shouldBe OptionalInt.empty
+
+						val projectionWithDefault = OptionalDouble(x).collect {
+							case that if that % 2 == 1 => 100
+							case _ => 200
+						}
+
+						projectionWithDefault shouldBe OptionalInt(200)
+					case 1 =>
+						val projection = OptionalDouble(x).collect {
+							case that if that % 2 == 1 => 100
+						}
+
+						projection shouldBe OptionalInt(100)
+
+						val projectionWithDefault = OptionalDouble(x).collect {
+							case that if that % 2 == 1 => 100
+							case _ => 200
+						}
+
+						projectionWithDefault shouldBe OptionalInt(100)
+				}
+			}
+		}
+	}
 }

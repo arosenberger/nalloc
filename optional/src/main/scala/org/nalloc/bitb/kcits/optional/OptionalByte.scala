@@ -40,6 +40,7 @@ final class OptionalByte(val value: Byte) extends AnyVal {
   def orElse(f: => OptionalByte): OptionalByte = macro OptionalMacros.orElse_impl[Byte, Byte]
   def fold[T](ifEmpty: => T)(f: Byte => T): T = macro OptionalMacros.fold_impl[Byte, T]
 	def forAll(f: Byte => Boolean): Boolean = macro OptionalMacros.forAll_impl[Byte]
+	def collect[B](pf: PartialFunction[Byte, B])(implicit x: OptionalResolver[B]): x.OptionalType = macro OptionalMacros.collect[Byte, B]
 
   override def toString = if (isEmpty) "-128 (empty)" else s"$value"
 }
