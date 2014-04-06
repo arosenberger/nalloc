@@ -112,6 +112,13 @@ The following functions are currently available in the master branch:
     OptionalInt(x).fold(15)(x => x + 1)
 ```
 
+- `forAll[A](f: A => Boolean): Boolean` If `A`'s value is the sentinel for that type, returns true. Otherwise evaluates the passed in function.
+```
+    Optional(x).forAll(_ == "foo")
+
+    OptionalInt(x).forAll(_ % 2 == 0)
+```
+
 Requirements
 ------
 

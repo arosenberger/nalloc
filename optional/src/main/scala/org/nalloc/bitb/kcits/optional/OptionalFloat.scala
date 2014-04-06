@@ -40,6 +40,7 @@ final class OptionalFloat(val value: Float) extends AnyVal {
   def getOrElse(f: => Float): Float = macro OptionalMacros.getOrElse_impl[Float]
 	def orElse(f: => OptionalFloat): OptionalFloat = macro OptionalMacros.orElse_impl[Float, Float]
   def fold[T](ifEmpty: => T)(f: Float => T): T = macro OptionalMacros.fold_impl[Float, T]
+	def forAll(f: Float => Boolean): Boolean = macro OptionalMacros.forAll_impl[Float]
 
   override def toString = if (isEmpty) s"${java.lang.Float.MIN_VALUE} (empty)" else s"$value"
 }

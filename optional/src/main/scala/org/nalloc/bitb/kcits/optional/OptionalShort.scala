@@ -39,6 +39,7 @@ final class OptionalShort(val value: Short) extends AnyVal {
   def getOrElse(f: => Short): Short = macro OptionalMacros.getOrElse_impl[Short]
 	def orElse(f: => OptionalShort): OptionalShort = macro OptionalMacros.orElse_impl[Short, Short]
   def fold[T](ifEmpty: => T)(f: Short => T): T = macro OptionalMacros.fold_impl[Short, T]
+	def forAll(f: Short => Boolean): Boolean = macro OptionalMacros.forAll_impl[Short]
 
   override def toString = if (isEmpty) "-32768 (empty)" else s"$value"
 }

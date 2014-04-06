@@ -174,4 +174,17 @@ class OptionalSpec extends OptionalTypeSuite {
       }
     }
   }
+
+	property("forAll on the empty value always returns true") {
+		Optional.empty[String].forAll(_ => false) shouldBe true
+	}
+
+	property("forAll on non empty values evaluates the passed in function") {
+		forAll { x: String =>
+			whenever(x != null) {
+				Optional(x).forAll(x => x == x) shouldBe true
+				Optional(x).forAll(x => x == x + "foo") shouldBe false
+			}
+		}
+	}
 }

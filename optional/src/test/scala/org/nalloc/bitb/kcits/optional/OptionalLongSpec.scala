@@ -175,4 +175,17 @@ class OptionalLongSpec extends OptionalTypeSuite {
       }
     }
   }
+
+	property("forAll on the empty value always returns false") {
+		OptionalLong.empty.forAll(_ => false) shouldBe true
+	}
+
+	property("forAll on non empty values evaluates the passed in function") {
+		forAll { x: Long =>
+			whenever(x != Long.MinValue) {
+				OptionalLong(x).forAll(x => x == x) shouldBe true
+				OptionalLong(x).forAll(x => x == x + 1) shouldBe false
+			}
+		}
+	}
 }

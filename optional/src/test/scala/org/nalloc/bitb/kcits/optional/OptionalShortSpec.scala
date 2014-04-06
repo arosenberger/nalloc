@@ -178,4 +178,17 @@ class OptionalShortSpec extends OptionalTypeSuite {
       }
     }
   }
+
+	property("forAll on the empty value always returns false") {
+		OptionalShort.empty.forAll(_ => false) shouldBe true
+	}
+
+	property("forAll on non empty values evaluates the passed in function") {
+		forAll { x: Short =>
+			whenever(x != Short.MinValue) {
+				OptionalShort(x).forAll(x => x == x) shouldBe true
+				OptionalShort(x).forAll(x => x == x + 1) shouldBe false
+			}
+		}
+	}
 }

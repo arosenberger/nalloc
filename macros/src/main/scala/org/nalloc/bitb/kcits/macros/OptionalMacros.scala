@@ -150,7 +150,17 @@ object OptionalMacros {
     """)
   }
 
-  private def underlyingValue[A: c.WeakTypeTag](c: Context) = {
+	def forAll_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A => Boolean]): c.Expr[Boolean] = {
+		import c.universe._
+
+		val underlying = underlyingValue[A](c)
+		val sentinelGuard = generateSentinelGuard[A](c)(underlying)
+
+		new Inliner[c.type](c).inlineAndReset(q"!$sentinelGuard || $f($underlying)")
+	}
+
+
+	private def underlyingValue[A: c.WeakTypeTag](c: Context) = {
     import c.universe._
 
     c.Expr[A](Select(c.prefix.tree, TermName("value")))

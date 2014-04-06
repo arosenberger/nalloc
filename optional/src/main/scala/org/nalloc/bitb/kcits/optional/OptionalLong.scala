@@ -39,6 +39,7 @@ final class OptionalLong(val value: Long) extends AnyVal {
   def getOrElse(f: => Long): Long = macro OptionalMacros.getOrElse_impl[Long]
 	def orElse(f: => OptionalLong): OptionalLong = macro OptionalMacros.orElse_impl[Long, Long]
   def fold[T](ifEmpty: => T)(f: Long => T): T = macro OptionalMacros.fold_impl[Long, T]
+	def forAll(f: Long => Boolean): Boolean = macro OptionalMacros.forAll_impl[Long]
 
   override def toString = if (isEmpty) s"${0x8000000000000000L} (empty)" else s"$value"
 }

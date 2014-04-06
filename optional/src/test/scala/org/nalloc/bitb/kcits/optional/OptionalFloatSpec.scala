@@ -160,4 +160,15 @@ class OptionalFloatSpec extends OptionalTypeSuite {
       OptionalFloat(value).fold(ifEmpty)(mapToFloat) shouldBe mapToFloat(value)
     }
   }
+
+	property("forAll on the empty value always returns false") {
+		OptionalFloat.empty.forAll(_ => false) shouldBe true
+	}
+
+	property("forAll on non empty values evaluates the passed in function") {
+		forAll { x: Float =>
+			OptionalFloat(x).forAll(x => x == x) shouldBe true
+			OptionalFloat(x).forAll(x => x.isNaN) shouldBe false
+		}
+	}
 }
