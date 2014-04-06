@@ -119,6 +119,18 @@ The following functions are currently available in the master branch:
     OptionalInt(x).forAll(_ % 2 == 0)
 ```
 
+- `collect[B](pf: PartialFunction[A, B]): OptionalTypeForB` If `A`'s value is the sentinel for that type, the function is not applied and instead the empty OptionalTypeB is returned. Otherwise evaluates the passed in partial function, defaulting to the empty OptionalTypeB if an explicit default was not provided.
+```
+    Optional(x).collect {
+    	case x if x.length % 2 == 0 => x
+    	case _ => x.substring(1) // can supply an explicit default
+    }
+
+    OptionalInt(x).collect{
+    	case x if x % 2 == 0 => x // OK not to supply explicit default, OptionalInt.empty will be added as a default
+    }
+```
+
 Requirements
 ------
 

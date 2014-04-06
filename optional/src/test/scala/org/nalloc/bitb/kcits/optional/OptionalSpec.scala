@@ -197,7 +197,7 @@ class OptionalSpec extends OptionalTypeSuite {
 	property("collect on non empty values evaluates the passed in partial function") {
 		forAll { x: String =>
 			whenever(x != null) {
-				x.length % 2 match {bu
+				x.length % 2 match {
 					case 0 =>
 						val projection = Optional(x).collect {
 							case that if that.length % 2 == 1 => 100
