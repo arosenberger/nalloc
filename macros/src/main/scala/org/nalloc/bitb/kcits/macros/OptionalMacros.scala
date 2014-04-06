@@ -36,7 +36,7 @@ object OptionalMacros {
     val sentinelTo = sentinelValue[B](c)
     val sentinelGuard = generateSentinelGuard[A](c)(underlying)
 
-    val optionalType = x.tree.tpe.declarations
+    val optionalType = x.tree.tpe.decls
                        .find(x => x.isType && x.name == TypeName("OptionalType"))
                        .map(_.typeSignature)
                        .getOrElse(c.abort(c.enclosingPosition, "Couldn't determine optional type"))
@@ -54,7 +54,7 @@ object OptionalMacros {
 
     val underlying = underlyingValue[A](c)
 
-    val primitiveType = x.tree.tpe.declarations
+    val primitiveType = x.tree.tpe.decls
                         .find(x => x.isType && x.name == TypeName("PrimitiveType"))
                         .map(_.typeSignature)
                         .getOrElse(c.abort(c.enclosingPosition, "Couldn't determine optional type"))
@@ -108,7 +108,7 @@ object OptionalMacros {
     """)
   }
 
-  def getOrElse_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A]) = {
+  def getOrElse_impl[A: c.WeakTypeTag](c: Context)(f: c.Expr[A]): c.Expr[A] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)
@@ -122,7 +122,21 @@ object OptionalMacros {
     """)
   }
 
-  def fold_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(ifEmpty: c.Expr[B])(f: c.Expr[A => B]) = {
+  def orElse_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(f: c.Expr[B]): c.Expr[B] = {
+    import c.universe._
+
+    val underlying = underlyingValue[A](c)
+    val sentinelGuard = generateSentinelGuard[A](c)(underlying)
+
+    new Inliner[c.type](c).inlineAndReset( q"""
+    if ($sentinelGuard)
+      ${c.prefix.tree}
+    else
+      $f
+    """)
+  }
+
+  def fold_impl[A: c.WeakTypeTag, B: c.WeakTypeTag](c: Context)(ifEmpty: c.Expr[B])(f: c.Expr[A => B]): c.Expr[B] = {
     import c.universe._
 
     val underlying = underlyingValue[A](c)

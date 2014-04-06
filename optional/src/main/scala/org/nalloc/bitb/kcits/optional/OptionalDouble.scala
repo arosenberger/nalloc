@@ -38,6 +38,7 @@ final class OptionalDouble(val value: Double) extends AnyVal {
   def exists(f: Double => Boolean): Boolean = macro OptionalMacros.exists_impl[Double]
   def filter(f: Double => Boolean): OptionalDouble = macro OptionalMacros.filter_impl[Double]
   def getOrElse(f: => Double): Double = macro OptionalMacros.getOrElse_impl[Double]
+	def orElse(f: => OptionalDouble): OptionalDouble = macro OptionalMacros.orElse_impl[Double, Double]
   def fold[T](ifEmpty: => T)(f: Double => T): T = macro OptionalMacros.fold_impl[Double, T]
 
   override def toString = if (isEmpty) s"${java.lang.Double.MIN_VALUE} (empty)" else s"$value"

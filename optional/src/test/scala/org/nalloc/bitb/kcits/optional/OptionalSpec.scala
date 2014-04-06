@@ -105,14 +105,26 @@ class OptionalSpec extends OptionalTypeSuite {
     }
   }
 
-  property("orElse on the empty value returns the passed in alternative") {
+  property("getOrElse on the empty value returns the passed in alternative") {
     Optional.empty[String].getOrElse("foo") shouldBe "foo"
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: String =>
+      whenever(x != null) {
+        Optional(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
+
+  property("orElse on the empty value returns the passed in alternative") {
+    Optional.empty[String].orElse(Optional("foo")) shouldBe Optional("foo")
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: String =>
       whenever(x != null) {
-        Optional(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+        Optional(x).orElse(throw new IllegalArgumentException) shouldBe Optional(x)
       }
     }
   }

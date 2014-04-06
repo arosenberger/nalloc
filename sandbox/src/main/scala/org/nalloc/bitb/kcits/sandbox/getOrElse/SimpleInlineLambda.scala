@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package org.nalloc.bitb.kcits.sandbox.orelse
+package org.nalloc.bitb.kcits.sandbox.getOrElse
 
 import org.nalloc.bitb.kcits.sandbox.Inspectable
 
-class MethodValue extends Inspectable {
-
-  private[this] val bMethod = b.getOrElse(otherB)
-  private[this] val sMethod = s.getOrElse(otherS)
-  private[this] val iMethod = i.getOrElse(otherI)
-  private[this] val lMethod = l.getOrElse(otherL)
-  private[this] val fMethod = f.getOrElse(otherF)
-  private[this] val dMethod = d.getOrElse(otherD)
-  private[this] val stMethod = st.getOrElse(otherSt)
-
-  private def otherB = 1.toByte
-  private def otherS = 1.toShort
-  private def otherI = 1
-  private def otherL = 1
-  private def otherF = 1
-  private def otherD = 1
-  private def otherSt = "foo"
+class SimpleInlineLambda extends Inspectable {
+  private[this] val bInline = b.getOrElse(1)
+  private[this] val sInline = s.getOrElse(2)
+  private[this] val iInline = i.getOrElse(3)
+  private[this] val lInline = l.getOrElse(4)
+  private[this] val fInline = f.getOrElse(5)
+  private[this] val dInline = d.getOrElse(6)
+  private[this] val stInline = st.getOrElse("foo")
 }

@@ -107,14 +107,26 @@ class OptionalIntSpec extends OptionalTypeSuite {
     }
   }
 
-  property("orElse on the empty value returns the passed in alternative") {
+  property("getOrElse on the empty value returns the passed in alternative") {
     OptionalInt.empty.getOrElse(1) shouldBe 1
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: Int =>
+      whenever(x != Int.MinValue) {
+        OptionalInt(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
+
+  property("orElse on the empty value returns the passed in alternative") {
+    OptionalInt.empty.orElse(OptionalInt(1)) shouldBe OptionalInt(1)
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Int =>
       whenever(x != Int.MinValue) {
-        OptionalInt(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+        OptionalInt(x).orElse(throw new IllegalArgumentException) shouldBe OptionalInt(x)
       }
     }
   }

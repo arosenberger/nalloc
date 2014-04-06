@@ -14,38 +14,39 @@
  * limitations under the License.
  */
 
-package org.nalloc.bitb.kcits.sandbox.orelse
+package org.nalloc.bitb.kcits.sandbox.orElse
 
+import org.nalloc.bitb.kcits.optional._
 import org.nalloc.bitb.kcits.sandbox.Inspectable
 
 class BlockInlineLambda extends Inspectable {
 
-  private[this] val bInlineComplex = b.getOrElse {
-    val y = 5
-    (y * 3).toByte
-  }
-  private[this] val sInlineComplex = s.getOrElse {
-    val y = 5
-    (y * 3).toShort
-  }
-  private[this] val iInlineComplex = i.getOrElse {
-    val y = 5
-    y * 3
-  }
-  private[this] val lInlineComplex = l.getOrElse {
-    val y = 5
-    y * 3
-  }
-  private[this] val fInlineComplex = f.getOrElse {
-    val y = 5
-    y * 3
-  }
-  private[this] val dInlineComplex = d.getOrElse {
-    val y = 5
-    y * 3
-  }
-  private[this] val stInlineComplex = st.getOrElse {
-    val y = "foo"
-    y + y
-  }
+	private[this] val bInlineComplex = b.orElse {
+		val y = 5
+		OptionalByte((y * 3).toByte)
+	}
+	private[this] val sInlineComplex = s.orElse {
+		val y = 5
+		OptionalShort((y * 3).toShort)
+	}
+	private[this] val iInlineComplex = i.orElse {
+		val y = 5
+		OptionalInt(y * 3)
+	}
+	private[this] val lInlineComplex = l.orElse {
+		val y = 5
+		OptionalLong(y * 3)
+	}
+	private[this] val fInlineComplex = f.orElse {
+		val y = 5
+		OptionalFloat(y * 3)
+	}
+	private[this] val dInlineComplex = d.orElse {
+		val y = 5
+		OptionalDouble(y * 3)
+	}
+	private[this] val stInlineComplex = st.orElse {
+		val y = "foo"
+		Optional(y + y)
+	}
 }

@@ -25,7 +25,8 @@ trait GcSupport {
     var localCount = gcCount
 
     while (localCount <= gcCount) {
-      System.gc()
+			Thread.`yield`()
+			System.gc()
       localCount = currentGcCount
     }
 

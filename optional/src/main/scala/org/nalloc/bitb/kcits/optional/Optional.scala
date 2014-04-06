@@ -19,31 +19,32 @@ package org.nalloc.bitb.kcits.optional
 import org.nalloc.bitb.kcits.macros._
 
 object Optional {
-  final private[this] val None = new Optional[Null](null)
+	final private[this] val None = new Optional[Null](null)
 
-  def empty[A >: Null]: Optional[A] = None
-  def apply[A >: Null](value: A): Optional[A] = if (value == null) None else new Optional[A](value)
-  def unapply[A >: Null](value: A): Optional[A] = if (value == null) None else Optional[A](value)
+	def empty[A >: Null]: Optional[A] = None
+	def apply[A >: Null](value: A): Optional[A] = if (value == null) None else new Optional[A](value)
+	def unapply[A >: Null](value: A): Optional[A] = if (value == null) None else Optional[A](value)
 
-  def apply(value: Byte): OptionalByte = OptionalByte(value)
-  def apply(value: Short): OptionalShort = OptionalShort(value)
-  def apply(value: Int): OptionalInt = OptionalInt(value)
-  def apply(value: Long): OptionalLong = OptionalLong(value)
-  def apply(value: Float): OptionalFloat = OptionalFloat(value)
-  def apply(value: Double): OptionalDouble = OptionalDouble(value)
+	def apply(value: Byte): OptionalByte = OptionalByte(value)
+	def apply(value: Short): OptionalShort = OptionalShort(value)
+	def apply(value: Int): OptionalInt = OptionalInt(value)
+	def apply(value: Long): OptionalLong = OptionalLong(value)
+	def apply(value: Float): OptionalFloat = OptionalFloat(value)
+	def apply(value: Double): OptionalDouble = OptionalDouble(value)
 }
 
 final class Optional[+A >: Null](val value: A) extends AnyVal {
-  def get: A = value
-  def isEmpty = value == null
+	def get: A = value
+	def isEmpty = value == null
 
-  def map[B](f: A => B)(implicit x: OptionalResolver[B]): x.OptionalType = macro OptionalMacros.map_impl[A, B]
-  def flatMap[B](f: A => B)(implicit x: PrimitiveResolver[B]): B = macro OptionalMacros.flatMap_impl[A, B]
-  def foreach(f: A => Unit): Unit = macro OptionalMacros.foreach_impl[A]
-  def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
-  def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
-  def getOrElse(f: => A): A = macro OptionalMacros.getOrElse_impl[A]
-  def fold[B](ifEmpty: => B)(f: A => B): B = macro OptionalMacros.fold_impl[A, B]
+	def map[B](f: A => B)(implicit x: OptionalResolver[B]): x.OptionalType = macro OptionalMacros.map_impl[A, B]
+	def flatMap[B](f: A => B)(implicit x: PrimitiveResolver[B]): B = macro OptionalMacros.flatMap_impl[A, B]
+	def foreach(f: A => Unit): Unit = macro OptionalMacros.foreach_impl[A]
+	def exists(f: A => Boolean): Boolean = macro OptionalMacros.exists_impl[A]
+	def filter(f: A => Boolean): Optional[A] = macro OptionalMacros.filter_impl[A]
+	def getOrElse(f: => A): A = macro OptionalMacros.getOrElse_impl[A]
+	def orElse[B >: A](f: => Optional[B]): Optional[B] = macro OptionalMacros.orElse_impl[A, B]
+	def fold[B](ifEmpty: => B)(f: A => B): B = macro OptionalMacros.fold_impl[A, B]
 
-  override def toString = if (isEmpty) "null (empty)" else s"$value"
+	override def toString = if (isEmpty) "null (empty)" else s"$value"
 }

@@ -104,14 +104,26 @@ class OptionalLongSpec extends OptionalTypeSuite {
     }
   }
 
-  property("orElse on the empty value returns the passed in alternative") {
+  property("getOrElse on the empty value returns the passed in alternative") {
     OptionalLong.empty.getOrElse(1.toByte) shouldBe 1
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: Long =>
+      whenever(x != Long.MinValue) {
+        OptionalLong(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+      }
+    }
+  }
+
+  property("orElse on the empty value returns the passed in alternative") {
+    OptionalLong.empty.orElse(OptionalLong(1)) shouldBe OptionalLong(1)
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Long =>
       whenever(x != Long.MinValue) {
-        OptionalLong(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+        OptionalLong(x).orElse(throw new IllegalArgumentException) shouldBe OptionalLong(x)
       }
     }
   }

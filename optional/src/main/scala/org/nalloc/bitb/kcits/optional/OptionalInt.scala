@@ -37,6 +37,7 @@ final class OptionalInt(val value: Int) extends AnyVal {
   def exists(f: Int => Boolean): Boolean = macro OptionalMacros.exists_impl[Int]
   def filter(f: Int => Boolean): OptionalInt = macro OptionalMacros.filter_impl[Int]
   def getOrElse(f: => Int): Int = macro OptionalMacros.getOrElse_impl[Int]
+	def orElse(f: => OptionalInt): OptionalInt = macro OptionalMacros.orElse_impl[Int, Int]
   def fold[T](ifEmpty: => T)(f: Int => T): T = macro OptionalMacros.fold_impl[Int, T]
 
   override def toString = if (isEmpty) "-2147483648 (empty)" else s"$value"

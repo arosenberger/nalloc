@@ -97,13 +97,23 @@ class OptionalFloatSpec extends OptionalTypeSuite {
     }
   }
 
-  property("orElse on the empty value returns the passed in alternative") {
+  property("getOrElse on the empty value returns the passed in alternative") {
     OptionalFloat.empty.getOrElse(1.toByte) shouldBe 1
+  }
+
+  property("getOrElse on non empty values does not evaluate the passed in function") {
+    forAll { x: Float =>
+      OptionalFloat(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+    }
+  }
+
+  property("orElse on the empty value returns the passed in alternative") {
+    OptionalFloat.empty.orElse(OptionalFloat(1)) shouldBe OptionalFloat(1)
   }
 
   property("orElse on non empty values does not evaluate the passed in function") {
     forAll { x: Float =>
-      OptionalFloat(x).getOrElse(throw new IllegalArgumentException) shouldBe x
+      OptionalFloat(x).orElse(throw new IllegalArgumentException) shouldBe OptionalFloat(x)
     }
   }
 

@@ -98,6 +98,13 @@ The following functions are currently available in the master branch:
     OptionalInt(x).getOrElse(15)
 ```
 
+- `orElse[A](f: => OptionalTypeForA): OptionalTypeForA` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise returns the original Optional wrapper.
+```
+    Optional(x).orElse(Optional("foo"))
+
+    OptionalInt(x).orElse(OptionalInt(15))
+```
+
 - `fold[B](ifEmpty: => B)(f: A => B): A` If `A`'s value is the sentinel for that type, evaluates and returns the default. Otherwise applies `f` to the underlying value.
 ```
     Optional(x).fold("foo")(_ + "bar)

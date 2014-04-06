@@ -20,7 +20,7 @@ import java.util.Random
 import org.nalloc.bitb.kcits.optional.OptionalLong
 import scala.annotation.switch
 
-object OrElseMemoryUsage extends MemoryUsageApp {
+object GetOrElseMemoryUsage extends MemoryUsageApp {
   protected def passes = 25
   private[this] val passes_ = passes
   private[this] val iterations = 1e7.toInt
@@ -61,7 +61,7 @@ object OrElseMemoryUsage extends MemoryUsageApp {
       case _               =>
     }
 
-    if (OptionalLong(10).orElse(OptionalLong(15)) != OptionalLong(10)) sys.error("")
+    if (OptionalLong(10).getOrElse(15) != 10) sys.error("")
     if (customOptionValues(0) != 0) sys.error("")
     initMemory()
   }
@@ -77,7 +77,7 @@ object OrElseMemoryUsage extends MemoryUsageApp {
         case 1 => seedValuesReverse(i)
       }
 
-      sum += OptionalLong(optional).orElse(OptionalLong(i)).value
+      sum += OptionalLong(optional).getOrElse(i)
 
       i += 1
     }
