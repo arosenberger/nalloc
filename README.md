@@ -134,7 +134,7 @@ The following functions are currently available in the master branch:
 Requirements
 ------
 
-The project is built against Scala 2.11.0-RC1 and uses Name Based Extractors which appeared in 2.11.0-M5.
+The project is built against Scala 2.11.0 and uses Name Based Extractors which appeared in 2.11.0-M5.
 
 SBT Dependency
 ------

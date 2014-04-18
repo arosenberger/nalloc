@@ -91,13 +91,13 @@ object Build extends sbt.Build {
 object Shared {
 
   val testDeps = Seq(
-    "org.scalatest" %% "scalatest" % "2.1.0" % "it,test",
+    "org.scalatest" %% "scalatest" % "2.1.3" % "it,test",
     "org.scalacheck" %% "scalacheck" % "1.11.3" % "it,test"
   )
 
   val settings = Seq(
     organization := "org.nalloc",
-    scalaVersion := "2.11.0-RC1",
+    scalaVersion := "2.11.0",
     scalacOptions := Seq(
       "-deprecation",
       "-feature",
